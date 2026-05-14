@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Геном Роста — Лаборатория роста бизнеса</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Inter',sans-serif;
+background:
+radial-gradient(circle at top left,#ffffff 0%,#eef5ff 35%,#f7f9fc 100%);
+min-height:100vh;
+overflow-x:hidden;
+color:#1d2736;
+}
+
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at 20% 20%,rgba(201,160,61,.12),transparent 30%),
+radial-gradient(circle at 80% 10%,rgba(119,176,255,.12),transparent 30%),
+radial-gradient(circle at 50% 80%,rgba(201,160,61,.08),transparent 35%);
+pointer-events:none;
+z-index:-1;
+}
+
+.container{
+width:100%;
+max-width:720px;
+margin:0 auto;
+padding:24px 18px 80px;
+}
+
+.card{
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.5);
+border-radius:32px;
+padding:28px;
+box-shadow:
+0 10px 40px rgba(61,84,122,.08),
+0 0 0 1px rgba(255,255,255,.4);
+animation:fadeUp .6s ease;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.logo{
+text-align:center;
+margin-bottom:24px;
+}
+
+.logo h1{
+font-size:34px;
+font-weight:800;
+background:linear-gradient(135deg,#C9A03D,#e2c36c);
+-webkit-background-clip:text;
+color:transparent;
+letter-spacing:-1px;
+}
+
+.subtitle{
+margin-top:8px;
+font-size:15px;
+color:#5e6978;
+line-height:1.5;
+}
+
+.hero{
+display:flex;
+align-items:center;
+gap:22px;
+margin-bottom:26px;
+}
+
+.hero-image{
+width:140px;
+height:180px;
+border-radius:28px;
+overflow:hidden;
+flex-shrink:0;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+border:2px solid rgba(255,255,255,.7);
+}
+
+.hero-image img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.hero-text h2{
+font-size:30px;
+line-height:1.05;
+margin-bottom:14px;
+font-weight:800;
+}
+
+.hero-text p{
+font-size:16px;
+line-height:1.6;
+color:#526070;
+}
+
+.start-btn,
+.next-btn,
+.result-btn,
+.download-btn,
+.max-btn{
+width:100%;
+border:none;
+cursor:pointer;
+padding:18px;
+border-radius:22px;
+font-size:16px;
+font-weight:700;
+transition:.25s;
+}
+
+.start-btn,
+.next-btn,
+.result-btn,
+.download-btn{
+background:linear-gradient(135deg,#C9A03D,#e1c56d);
+color:#1d2736;
+box-shadow:0 10px 25px rgba(201,160,61,.28);
+}
+
+.start-btn:hover,
+.next-btn:hover,
+.result-btn:hover,
+.download-btn:hover{
+transform:translateY(-2px);
+}
+
+.max-btn{
+margin-top:14px;
+background:#ffffff;
+border:1px solid rgba(201,160,61,.3);
+color:#1d2736;
+}
+
+.section-title{
+font-size:28px;
+font-weight:800;
+margin-bottom:18px;
+line-height:1.1;
+}
+
+.input-group{
+margin-bottom:18px;
+}
+
+.input-group input{
+width:100%;
+padding:16px 18px;
+border-radius:18px;
+border:1px solid rgba(201,160,61,.25);
+background:rgba(255,255,255,.85);
+font-size:15px;
+outline:none;
+transition:.2s;
+}
+
+.input-group input:focus{
+border-color:#C9A03D;
+box-shadow:0 0 0 4px rgba(201,160,61,.12);
+}
+
+.checkbox{
+display:flex;
+gap:12px;
+align-items:flex-start;
+margin-top:18px;
+}
+
+.checkbox input{
+margin-top:4px;
+transform:scale(1.2);
+accent-color:#C9A03D;
+}
+
+.checkbox label{
+font-size:14px;
+line-height:1.5;
+color:#536173;
+}
+
+.links{
+margin-top:14px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.links a{
+color:#9d7a20;
+font-size:14px;
+text-decoration:none;
+}
+
+.progress{
+width:100%;
+height:10px;
+background:rgba(201,160,61,.12);
+border-radius:100px;
+overflow:hidden;
+margin-bottom:24px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#C9A03D,#e7cd83);
+border-radius:100px;
+transition:.3s;
+}
+
+.question{
+font-size:28px;
+font-weight:800;
+line-height:1.2;
+margin-bottom:26px;
+}
+
+.answers{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.answer{
+padding:18px;
+border-radius:22px;
+border:1px solid rgba(201,160,61,.18);
+background:rgba(255,255,255,.65);
+cursor:pointer;
+transition:.25s;
+font-size:15px;
+line-height:1.5;
+text-align:left;
+}
+
+.answer:hover{
+transform:translateY(-2px);
+}
+
+.answer.selected{
+border:2px solid #C9A03D;
+background:rgba(201,160,61,.12);
+box-shadow:0 0 0 5px rgba(201,160,61,.08);
+}
+
+.analysis{
+text-align:center;
+padding:70px 20px;
+}
+
+.dna{
+font-size:64px;
+animation:spin 6s linear infinite;
+margin-bottom:22px;
+}
+
+@keyframes spin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+.analysis-text{
+font-size:24px;
+font-weight:700;
+line-height:1.4;
+}
+
+.result-box{
+padding:22px;
+border-radius:28px;
+background:rgba(255,255,255,.72);
+border:1px solid rgba(201,160,61,.18);
+margin-top:20px;
+}
+
+.result-title{
+font-size:32px;
+font-weight:800;
+line-height:1.1;
+margin-bottom:18px;
+}
+
+.result-level{
+display:inline-block;
+padding:12px 18px;
+border-radius:100px;
+background:rgba(201,160,61,.14);
+color:#9d7a20;
+font-weight:700;
+margin-bottom:22px;
+}
+
+.result-section{
+margin-top:24px;
+}
+
+.result-section h3{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.result-section p{
+line-height:1.7;
+color:#516072;
+}
+
+.roadmap{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:18px;
+}
+
+.roadmap-step{
+padding:16px;
+border-radius:18px;
+background:rgba(255,255,255,.7);
+border:1px solid rgba(201,160,61,.16);
+}
+
+.email-text{
+font-size:16px;
+line-height:1.7;
+color:#526070;
+margin-bottom:20px;
+}
+
+.hidden{
+display:none;
+}
+
+@media(max-width:720px){
+
+.hero{
+flex-direction:column;
+text-align:center;
+}
+
+.hero-image{
+width:180px;
+height:220px;
+}
+
+.hero-text h2{
+font-size:34px;
+}
+
+.question{
+font-size:24px;
+}
+
+.card{
+padding:22px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ЭКРАН 1 -->
+
+<div class="card" id="screenIntro">
+
+<div class="logo">
+<h1>ГЕНОМ РОСТА</h1>
+<div class="subtitle">
+Интерактивная диагностика архитектуры бизнеса
+</div>
+</div>
+
+<div class="hero">
+
+<div class="hero-image">
+<img src="hero.jpg" alt="Проводник лаборатории">
+</div>
+
+<div class="hero-text">
+<h2>Лаборатория роста бизнеса</h2>
+
+<p>
+Система определит,
+что именно тормозит рост вашего бизнеса,
+и покажет точки усиления:
+контент,
+упаковку,
+смыслы,
+воронку
+и автоматизацию.
+</p>
+
+</div>
+
+</div>
+
+<button class="start-btn" onclick="goToScreen('screenConsent')">
+НАЧАТЬ ДИАГНОСТИКУ
+</button>
+
+</div>
+
+<!-- ЭКРАН 2 -->
+
+<div class="card hidden" id="screenConsent">
+
+<div class="section-title">
+Перед запуском диагностики
+</div>
+
+<div class="input-group">
+<input type="text" id="userName" placeholder="Ваше имя">
+</div>
+
+<div class="checkbox">
+<input type="checkbox" id="pdConsent">
+<label>
+Я даю согласие на обработку персональных данных
+</label>
+</div>
+
+<div class="links">
+<a href="https://moskovchukproonline.tilda.ws/consentprivacy" target="_blank">
+Согласие на обработку персональных данных
+</a>
+
+<a href="https://moskovchukproonline.tilda.ws/privacypolicy" target="_blank">
+Политика конфиденциальности
+</a>
+</div>
+
+<button class="next-btn" style="margin-top:26px;" onclick="startTest()">
+ПРОДОЛЖИТЬ
+</button>
+
+</div>
+
+<!-- ЭКРАН ТЕСТА -->
+
+<div class="card hidden" id="screenQuestion">
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="question" id="questionText"></div>
+
+<div class="answers" id="answersContainer"></div>
+
+</div>
+
+<!-- АНАЛИЗ -->
+
+<div class="card hidden" id="screenAnalysis">
+
+<div class="analysis">
+
+<div class="dna">🧬</div>
+
+<div class="analysis-text" id="analysisText">
+Анализируем архитектуру бизнеса…
+</div>
+
+</div>
+
+</div>
+
+<!-- РЕЗУЛЬТАТ -->
+
+<div class="card hidden" id="screenResult">
+
+<div class="result-title">
+Ваш геном роста
+</div>
+
+<div class="result-level" id="resultLevel"></div>
+
+<div class="result-box">
+
+<div class="result-section">
+<h3>Главный системный сбой</h3>
+<p id="mainProblem"></p>
+</div>
+
+<div class="result-section">
+<h3>Ключевой ген роста</h3>
+<p id="growthGene"></p>
+</div>
+
+<div class="result-section">
+<h3>Карта эволюции</h3>
+
+<div class="roadmap">
+<div class="roadmap-step">
+СТАБИЛИЗАЦИЯ → Убираем хаос и собираем фундамент системы
+</div>
+
+<div class="roadmap-step">
+УСИЛЕНИЕ → Докручиваем упаковку, смыслы и воронку
+</div>
+
+<div class="roadmap-step">
+АВТОМАТИЗАЦИЯ → Система начинает поддерживать продажи
+</div>
+
+<div class="roadmap-step">
+ЭКОСИСТЕМА → Бизнес масштабируется через digital-механики
+</div>
+</div>
+
+</div>
+
+</div>
+
+<button class="result-btn" style="margin-top:22px;" onclick="goToScreen('screenEmail')">
+СОХРАНИТЬ ГЕНОМ
+</button>
+
+</div>
+
+<!-- EMAIL -->
+
+<div class="card hidden" id="screenEmail">
+
+<div class="section-title">
+Сохранение генома
+</div>
+
+<div class="email-text">
+🧬 Система может сохранить
+вашу карту роста и коды усиления бизнеса.
+
+<br><br>
+
+Укажите адрес электронной почты,
+чтобы получить доступ к материалам лаборатории.
+</div>
+
+<div class="input-group">
+<input type="email" id="userEmail" placeholder="Адрес электронной почты">
+</div>
+
+<div class="checkbox">
+<input type="checkbox" id="mailConsent">
+
+<label>
+Я даю согласие на получение рассылок
+с полезными материалами и обновлениями лаборатории
+</label>
+</div>
+
+<div class="links">
+
+<a href="https://moskovchukproonline.tilda.ws/consentpromo" target="_blank">
+Согласие на получение рассылок
+</a>
+
+</div>
+
+<button class="download-btn" style="margin-top:24px;" onclick="saveLeadAndDownload()">
+СКАЧАТЬ PDF
+</button>
+
+</div>
+
+<!-- ФИНАЛ -->
+
+<div class="card hidden" id="screenFinal">
+
+<div class="section-title">
+🧬 Геном роста сохранён
+</div>
+
+<div class="email-text">
+Лаборатория открыта.
+
+<br><br>
+
+Внутри:
+разборы,
+механики роста,
+автоматизация,
+упаковка,
+контент
+и digital-системы для бизнеса.
+</div>
+
+<button class="max-btn"
+onclick="window.open('https://max.ru','_blank')">
+ПЕРЕЙТИ В ЛАБОРАТОРИЮ
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const DASHAMAIL_API_KEY = "5743dbd0b692e6d0eecf4b9326adad31";
+const DASHAMAIL_LIST_ID = "444613";
+
+const questions = [
+
+{
+question:"Что сейчас происходит с продажами через контент?",
+answers:[
+{ text:"Контент есть, но продаж почти нет", score:1 },
+{ text:"Продажи есть, но нестабильно", score:2 },
+{ text:"Контент уже приводит клиентов", score:3 }
+]
+},
+
+{
+question:"Как публикуется контент?",
+answers:[
+{ text:"Без системы и регулярности", score:1 },
+{ text:"Периодически по вдохновению", score:2 },
+{ text:"Есть система публикаций", score:3 }
+]
+},
+
+{
+question:"Сколько времени занимает создание контента?",
+answers:[
+{ text:"Очень много, всё делается вручную", score:1 },
+{ text:"Иногда выматывает", score:2 },
+{ text:"Есть автоматизация и структура", score:3 }
+]
+},
+
+{
+question:"Как аудитория реагирует на контент?",
+answers:[
+{ text:"Почти нет реакции", score:1 },
+{ text:"Есть просмотры, но мало заявок", score:2 },
+{ text:"Контент вызывает диалог и продажи", score:3 }
+]
+},
+
+{
+question:"Насколько понятна ваша ценность?",
+answers:[
+{ text:"Люди не понимают отличия от конкурентов", score:1 },
+{ text:"Иногда сложно объяснить ценность", score:2 },
+{ text:"Позиционирование уже сильное", score:3 }
+]
+},
+
+{
+question:"Насколько понятна целевая аудитория?",
+answers:[
+{ text:"Пока нет чёткого понимания", score:1 },
+{ text:"Есть общее понимание", score:2 },
+{ text:"Портрет клиента уже выстроен", score:3 }
+]
+},
+
+{
+question:"Как выглядит контентная система?",
+answers:[
+{ text:"Много разных тем без единой структуры", score:1 },
+{ text:"Частично есть система", score:2 },
+{ text:"Контент работает как единая архитектура", score:3 }
+]
+}
+
+];
+
+let currentQuestion = 0;
+let totalScore = 0;
+
+function goToScreen(id){
+
+document.querySelectorAll('.card').forEach(el=>{
+el.classList.add('hidden');
+});
+
+document.getElementById(id).classList.remove('hidden');
+
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
+
+}
+
+function startTest(){
+
+const name = document.getElementById('userName').value.trim();
+const consent = document.getElementById('pdConsent').checked;
+
+if(!name){
+alert('Введите имя');
+return;
+}
+
+if(!consent){
+alert('Необходимо согласие на обработку персональных данных');
+return;
+}
+
+goToScreen('screenQuestion');
+
+renderQuestion();
+
+}
+
+function renderQuestion(){
+
+const q = questions[currentQuestion];
+
+document.getElementById('questionText').innerText = q.question;
+
+document.getElementById('progressBar').style.width =
+((currentQuestion)/questions.length)*100 + '%';
+
+const container = document.getElementById('answersContainer');
+
+container.innerHTML = '';
+
+q.answers.forEach(answer=>{
+
+const div = document.createElement('div');
+
+div.className = 'answer';
+
+div.innerText = answer.text;
+
+div.onclick = ()=>{
+
+document.querySelectorAll('.answer').forEach(el=>{
+el.classList.remove('selected');
+});
+
+div.classList.add('selected');
+
+setTimeout(()=>{
+
+totalScore += answer.score;
+
+currentQuestion++;
+
+if(currentQuestion < questions.length){
+
+renderQuestion();
+
+}else{
+
+showAnalysis();
+
+}
+
+},300);
+
+};
+
+container.appendChild(div);
+
+});
+
+}
+
+function showAnalysis(){
+
+goToScreen('screenAnalysis');
+
+const texts = [
+
+"Анализируем архитектуру бизнеса…",
+"Выявляем системные сбои…",
+"Расшифровываем геном роста…",
+"Определяем коды усиления…",
+"Формируем карту эволюции…"
+
+];
+
+let index = 0;
+
+const interval = setInterval(()=>{
+
+index++;
+
+if(index < texts.length){
+
+document.getElementById('analysisText').innerText = texts[index];
+
+}else{
+
+clearInterval(interval);
+
+setTimeout(showResult,800);
+
+}
+
+},1400);
+
+}
+
+function showResult(){
+
+goToScreen('screenResult');
+
+let level = '';
+let problem = '';
+let gene = '';
+
+if(totalScore <= 10){
+
+level = 'РУЧНОЙ РЕЖИМ';
+
+problem = 'Система бизнеса пока держится в основном на ручных усилиях. Контент требует слишком много энергии, а продажи не поддерживаются архитектурой системы.';
+
+gene = 'Ваш главный ген роста — системность. Сейчас ключевая задача: собрать фундамент контента, упаковки и воронки в единую структуру.';
+
+}
+
+else if(totalScore <= 15){
+
+level = 'НЕСТАБИЛЬНАЯ СИСТЕМА';
+
+problem = 'Контент и продажи уже работают, но хаотично. Рост зависит от постоянных запусков, энергии и ручного контроля.';
+
+gene = 'Ваш главный ген роста — усиление смыслов и упаковки. Бизнесу нужна более сильная архитектура продаж.';
+
+}
+
+else if(totalScore <= 18){
+
+level = 'СИСТЕМА УСИЛЕНИЯ';
+
+problem = 'У вас уже есть рабочая база, но система пока не масштабируется на полную мощность.';
+
+gene = 'Ваш главный ген роста — автоматизация и экосистема контента.';
+
+}
+
+else{
+
+level = 'ЭКОСИСТЕМА РОСТА';
+
+problem = 'Система бизнеса уже выстроена и готова к масштабированию через digital-механики и автоматизацию.';
+
+gene = 'Ваш главный ген роста — масштабирование и построение полноценной digital-экосистемы.';
+
+}
+
+document.getElementById('resultLevel').innerText = level;
+
+document.getElementById('mainProblem').innerText = problem;
+
+document.getElementById('growthGene').innerText = gene;
+
+}
+
+async function saveLeadAndDownload(){
+
+const email = document.getElementById('userEmail').value.trim();
+const consent = document.getElementById('mailConsent').checked;
+const name = document.getElementById('userName').value.trim();
+
+if(!email){
+alert('Укажите адрес электронной почты');
+return;
+}
+
+if(!consent){
+alert('Необходимо согласие на получение рассылок');
+return;
+}
+
+try{
+
+await fetch('https://api.dashamail.ru/',{
+
+method:'POST',
+
+headers:{
+'Content-Type':'application/json'
+},
+
+body:JSON.stringify({
+
+method:'lists.add_member',
+
+api_key:DASHAMAIL_API_KEY,
+
+list_id:DASHAMAIL_LIST_ID,
+
+email:email,
+
+merge_1:name
+
+})
+
+});
+
+}catch(e){
+
+console.log(e);
+
+}
+
+generatePDF();
+
+goToScreen('screenFinal');
+
+}
+
+function generatePDF(){
+
+const { jsPDF } = window.jspdf;
+
+const doc = new jsPDF();
+
+const level =
+document.getElementById('resultLevel').innerText;
+
+const problem =
+document.getElementById('mainProblem').innerText;
+
+const gene =
+document.getElementById('growthGene').innerText;
+
+doc.setFont('helvetica');
+
+doc.setFontSize(24);
+
+doc.text('ГЕНОМ РОСТА',20,30);
+
+doc.setFontSize(14);
+
+doc.text('Персональная диагностика системы бизнеса',20,42);
+
+doc.setFontSize(18);
+
+doc.text('Ваш уровень:',20,70);
+
+doc.setFontSize(22);
+
+doc.text(level,20,82);
+
+doc.setFontSize(16);
+
+doc.text('Главный системный сбой:',20,110);
+
+doc.setFontSize(12);
+
+doc.text(problem,20,122,{maxWidth:170});
+
+doc.setFontSize(16);
+
+doc.text('Ключевой ген роста:',20,160);
+
+doc.setFontSize(12);
+
+doc.text(gene,20,172,{maxWidth:170});
+
+doc.save('genom-rosta.pdf');
+
+}
+
+</script>
+
+</body>
+</html>
