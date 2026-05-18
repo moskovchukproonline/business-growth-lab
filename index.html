@@ -986,6 +986,108 @@ document.getElementById('growthGene').innerText = gene;
 
 }
 
+const DASHAMAIL_API_URL = 'https://api.dashamail.ru/';
+const DASHAMAIL_API_KEY = '5743dbd0b692e6d0eecf4b9326adad31';
+const DASHAMAIL_LIST_ID = '444613';
+
+function buildDashamailParams(email, userName){
+
+const params = new URLSearchParams({
+method:'lists.add_member',
+api_key:DASHAMAIL_API_KEY,
+list_id:DASHAMAIL_LIST_ID,
+email:email,
+format:'json',
+update:'yes'
+});
+
+if(userName){
+params.set('merge_1',userName);
+}
+
+return params;
+
+}
+
+function submitDashamailViaForm(params){
+
+return new Promise(function(resolve){
+
+let iframe = document.getElementById('dashamailFrame');
+
+if(!iframe){
+iframe = document.createElement('iframe');
+iframe.id = 'dashamailFrame';
+iframe.name = 'dashamailFrame';
+iframe.setAttribute('aria-hidden','true');
+iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
+document.body.appendChild(iframe);
+}
+
+const form = document.createElement('form');
+form.method = 'POST';
+form.action = DASHAMAIL_API_URL;
+form.target = 'dashamailFrame';
+form.acceptCharset = 'UTF-8';
+form.style.display = 'none';
+
+params.forEach(function(value,key){
+const input = document.createElement('input');
+input.type = 'hidden';
+input.name = key;
+input.value = value;
+form.appendChild(input);
+});
+
+document.body.appendChild(form);
+form.submit();
+
+setTimeout(function(){
+form.remove();
+resolve();
+},800);
+
+});
+
+}
+
+async function addSubscriberToDashamail(email, userName){
+
+const params = buildDashamailParams(email, userName);
+
+try{
+
+const response = await fetch(DASHAMAIL_API_URL,{
+method:'POST',
+headers:{
+'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'
+},
+body:params.toString()
+});
+
+if(!response.ok){
+throw new Error('HTTP ' + response.status);
+}
+
+const data = await response.json();
+const errCode = data && data.response && data.response.msg
+? data.response.msg.err_code
+: null;
+
+if(errCode !== 0 && errCode !== '0'){
+console.warn('Dashamail:', data.response.msg.text || data);
+await submitDashamailViaForm(params);
+}
+
+}catch(error){
+
+console.warn('Dashamail fetch, отправка через форму:', error);
+await submitDashamailViaForm(params);
+
+}
+
+}
+
 async function saveLeadAndDownload(){
 
 const email = document.getElementById('userEmail').value.trim();
@@ -1002,39 +1104,7 @@ alert('Необходимо согласие на получение рассы�
 return;
 }
 
-try{
-
-await fetch('https://api.dashamail.com/',{
-
-method:'POST',
-
-headers:{
-'Content-Type':'application/json'
-},
-
-body:JSON.stringify({
-
-method:'lists.add_member',
-
-api_key:'5743dbd0b692e6d0eecf4b9326adad31',
-
-list_id:'444613',
-
-email:email,
-
-merge_1:userName,
-
-update:'yes'
-
-})
-
-});
-
-}catch(error){
-
-console.log('Ошибка Dashamail:',error);
-
-}
+await addSubscriberToDashamail(email, userName);
 
 await generatePDF();
 
