@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -89,9 +90,26 @@
     .logo {
       text-align: center;
       margin-bottom: 24px;
+      min-height: 120px;
     }
 
-    .logo h1 {
+    /* Стили для анимированного текста */
+    .text-type-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .text-type-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .animated-title {
       font-family: 'Manrope', 'Inter', system-ui, sans-serif;
       font-size: 34px;
       font-weight: 800;
@@ -100,6 +118,49 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      white-space: pre-wrap;
+    }
+
+    .animated-subtitle {
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      white-space: pre-wrap;
+    }
+
+    .static-text {
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 3px;
+      height: 34px;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      margin-left: 4px;
+      animation: blink 0.8s infinite;
+      vertical-align: middle;
+    }
+
+    .cursor-sub {
+      height: 28px;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
 
     .subtitle {
@@ -540,6 +601,18 @@
       .card {
         padding: 22px;
       }
+      .animated-title {
+        font-size: 28px;
+      }
+      .animated-subtitle {
+        font-size: 24px;
+      }
+      .cursor {
+        height: 28px;
+      }
+      .cursor-sub {
+        height: 24px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -553,17 +626,38 @@
         width: 65%;
         max-width: 65%;
       }
+      .animated-title {
+        font-size: 24px;
+      }
+      .animated-subtitle {
+        font-size: 20px;
+      }
+      .cursor {
+        height: 24px;
+      }
+      .cursor-sub {
+        height: 20px;
+      }
     }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- ЭКРАН INTRO -->
+  <!-- ЭКРАН INTRO с анимацией печати -->
   <div class="card" id="screenIntro">
     <div class="logo">
-      <h1>ГЕНОМ РОСТА</h1>
-      <div class="subtitle">Интерактивная диагностика архитектуры бизнеса</div>
+      <div class="text-type-container" id="textTypeContainer">
+        <div class="text-type-line">
+          <span id="animatedTitle" class="animated-title"></span>
+          <span id="titleCursor" class="cursor"></span>
+        </div>
+        <div class="text-type-line">
+          <span id="animatedSubtitle" class="animated-subtitle"></span>
+          <span id="subtitleCursor" class="cursor cursor-sub"></span>
+        </div>
+      </div>
+      <div class="subtitle" id="staticSubtitle" style="opacity: 0;">Интерактивная диагностика архитектуры бизнеса</div>
     </div>
 
     <div class="hero">
@@ -582,7 +676,7 @@
     <button type="button" class="primary-btn btn" onclick="goToScreen('screenConsent')">НАЧАТЬ ДИАГНОСТИКУ</button>
   </div>
 
-  <!-- СОГЛАСИЕ -->
+  <!-- ОСТАЛЬНЫЕ ЭКРАНЫ (без изменений) -->
   <div class="card hidden" id="screenConsent">
     <div class="section-title">Перед запуском диагностики</div>
     <div class="input-group">
@@ -600,7 +694,6 @@
     <button type="button" class="primary-btn btn btn-spaced" onclick="startTest()">ПРОДОЛЖИТЬ</button>
   </div>
 
-  <!-- ВОПРОСЫ -->
   <div class="card hidden" id="screenQuestion">
     <div class="quiz-header">
       <div class="progress-meta">
@@ -615,7 +708,6 @@
     <div class="answers" id="answersContainer"></div>
   </div>
 
-  <!-- АНАЛИЗ -->
   <div class="card hidden" id="screenAnalysis">
     <div class="analysis">
       <div class="dna">🧬</div>
@@ -623,7 +715,6 @@
     </div>
   </div>
 
-  <!-- РЕЗУЛЬТАТ -->
   <div class="card hidden" id="screenResult">
     <div class="result-title">Ваш геном роста</div>
     <div class="result-level" id="resultLevel" data-level="growth"></div>
@@ -647,7 +738,6 @@
     <button type="button" class="primary-btn btn btn-spaced-lg" onclick="goToScreen('screenEmail')">СОХРАНИТЬ ГЕНОМ</button>
   </div>
 
-  <!-- EMAIL -->
   <div class="card hidden" id="screenEmail">
     <div class="section-title">Сохранение генома</div>
     <div class="email-text prose">
@@ -668,7 +758,6 @@
     <button type="button" class="primary-btn btn btn-spaced" onclick="saveLeadAndDownload()">СКАЧАТЬ PDF</button>
   </div>
 
-  <!-- ФИНАЛ -->
   <div class="card hidden" id="screenFinal">
     <div class="section-title">🧬 Геном роста сохранён</div>
     <div class="email-text prose">
@@ -680,7 +769,6 @@
   </div>
 </div>
 
-<!-- PDF-шаблон -->
 <div id="pdfTemplate" class="pdf-sheet">
   <div style="background: #f6f0e8; padding: 48px; font-family: 'Inter', sans-serif;">
     <h1 style="font-family: 'Manrope', sans-serif; font-size: 40px; font-weight:800; background: linear-gradient(135deg,#C9A03D,#e2c36c); -webkit-background-clip:text; background-clip:text; color:transparent;">🧬 ГЕНОМ РОСТА</h1>
@@ -706,6 +794,62 @@
 </div>
 
 <script>
+  // Анимация печати для заголовков
+  const titleText = "ГЕНОМ РОСТА";
+  const subtitleMainText = "Лаборатория роста бизнеса";
+  
+  let titleIndex = 0;
+  let subtitleIndex = 0;
+  let titleComplete = false;
+  let subtitleComplete = false;
+  
+  const titleElement = document.getElementById('animatedTitle');
+  const subtitleElement = document.getElementById('animatedSubtitle');
+  const titleCursor = document.getElementById('titleCursor');
+  const subtitleCursor = document.getElementById('subtitleCursor');
+  const staticSubtitle = document.getElementById('staticSubtitle');
+  
+  function typeTitle() {
+    if (titleIndex < titleText.length) {
+      titleElement.textContent += titleText.charAt(titleIndex);
+      titleIndex++;
+      setTimeout(typeTitle, 75); // скорость печати
+    } else {
+      titleComplete = true;
+      titleCursor.style.opacity = '0';
+      checkBothComplete();
+    }
+  }
+  
+  function typeSubtitle() {
+    if (subtitleIndex < subtitleMainText.length) {
+      subtitleElement.textContent += subtitleMainText.charAt(subtitleIndex);
+      subtitleIndex++;
+      setTimeout(typeSubtitle, 60); // скорость печати
+    } else {
+      subtitleComplete = true;
+      subtitleCursor.style.opacity = '0';
+      checkBothComplete();
+    }
+  }
+  
+  function checkBothComplete() {
+    if (titleComplete && subtitleComplete) {
+      // Показываем статический подзаголовок с плавным появлением
+      setTimeout(() => {
+        staticSubtitle.style.transition = 'opacity 0.8s ease';
+        staticSubtitle.style.opacity = '1';
+      }, 300);
+    }
+  }
+  
+  // Запускаем анимацию после загрузки страницы
+  setTimeout(() => {
+    typeTitle();
+    setTimeout(typeSubtitle, 200); // небольшая задержка перед началом второго заголовка
+  }, 500);
+
+  // Остальной JavaScript без изменений
   const questions = [
     { question: "Что сейчас происходит с продажами через контент?", answers: [{ text: "Контент есть, но продаж почти нет", score: 1 }, { text: "Продажи есть, но нестабильно", score: 2 }, { text: "Контент уже приводит клиентов", score: 3 }] },
     { question: "Как публикуется контент?", answers: [{ text: "Без системы и регулярности", score: 1 }, { text: "Периодически по вдохновению", score: 2 }, { text: "Есть система публикаций", score: 3 }] },
@@ -824,11 +968,9 @@
   async function saveLeadAndDownload() {
     const email = document.getElementById('userEmail').value.trim();
     const consent = document.getElementById('mailConsent').checked;
-    const userName = document.getElementById('userName').value.trim();
     if (!email) { alert('Укажите адрес электронной почты'); return; }
     if (!consent) { alert('Необходимо согласие на получение рассылок'); return; }
     
-    // Сохраняем PDF
     const level = document.getElementById('resultLevel').innerText;
     const problem = document.getElementById('mainProblem').innerText;
     const gene = document.getElementById('growthGene').innerText;
