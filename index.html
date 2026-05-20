@@ -1,1666 +1,824 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Геном Роста — Лаборатория роста бизнеса</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<style>
-
-:root{
---gold:#C9A03D;
---gold-light:#e2c36c;
---gold-soft:rgba(201,160,61,.12);
---gold-border:rgba(201,160,61,.25);
---gold-shadow:rgba(201,160,61,.28);
---text:#1d2736;
---text-muted:#536173;
---text-subtle:#5d6877;
---text-footer:#7a8797;
---link:#7a5f12;
---font-body:'Inter',system-ui,sans-serif;
---font-heading:'Manrope','Inter',system-ui,sans-serif;
---bg-base:
-radial-gradient(ellipse 110% 95% at 50% 42%,#ffffff 0%,#fcf9f6 22%,#f6f0e8 48%,#efe6dc 72%,#e6ddd2 100%);
---bg-edge:
-radial-gradient(ellipse 140% 100% at 50% 50%,transparent 42%,rgba(228,218,206,.35) 100%);
---bg-glow:
-radial-gradient(ellipse 55% 45% at 78% 35%,rgba(240,228,218,.5),transparent 60%),
-radial-gradient(ellipse 40% 35% at 12% 68%,rgba(201,160,61,.07),transparent 55%);
---card-bg:linear-gradient(152deg,rgba(255,255,255,.96) 0%,rgba(252,247,241,.94) 38%,rgba(245,238,229,.92) 100%);
---card-border:rgba(255,255,255,.85);
---card-shadow:0 12px 40px rgba(160,135,110,.12),inset 0 1px 0 rgba(255,255,255,.9);
---surface:linear-gradient(160deg,#ffffff 0%,#faf6f0 100%);
---surface-muted:linear-gradient(155deg,rgba(255,255,255,.97) 0%,rgba(250,244,236,.95) 100%);
---input-bg:linear-gradient(180deg,#ffffff 0%,#faf7f2 100%);
---radius-card:28px;
---radius-btn:18px;
---radius-input:14px;
---radius-hero:10px;
---font-display:34px;
---font-h2:34px;
---font-section:28px;
---font-question:28px;
---transition:.25s ease;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-font-family:var(--font-body);
-background:var(--bg-base);
-min-height:100dvh;
-overflow-x:hidden;
-color:var(--text);
-}
-
-body::before{
-content:"";
-position:fixed;
-inset:0;
-background:var(--bg-edge);
-pointer-events:none;
-z-index:-3;
-}
-
-body::after{
-content:"";
-position:fixed;
-inset:0;
-background:var(--bg-glow);
-pointer-events:none;
-z-index:-2;
-}
-
-.container{
-position:relative;
-z-index:1;
-width:100%;
-max-width:720px;
-margin:0 auto;
-padding:24px 18px calc(80px + env(safe-area-inset-bottom));
-padding-top:max(24px,env(safe-area-inset-top));
-}
-
-.card{
-background:var(--card-bg);
-border:1px solid var(--card-border);
-border-radius:var(--radius-card);
-padding:28px;
-box-shadow:var(--card-shadow);
-position:relative;
-overflow:hidden;
-}
-
-@supports (backdrop-filter:blur(18px)){
-.card{
-backdrop-filter:blur(18px);
--webkit-backdrop-filter:blur(18px);
-}
-}
-
-@supports not (backdrop-filter:blur(18px)){
-.card{
-background:var(--surface);
-}
-}
-
-.card::before{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,transparent 38%,rgba(245,238,229,.15) 100%);
-pointer-events:none;
-border-radius:inherit;
-}
-
-.card--entering{
-animation:fadeUp .45s ease;
-}
-
-.card--leaving{
-animation:fadeOut .22s ease forwards;
-}
-
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-@keyframes fadeOut{
-to{
-opacity:0;
-transform:translateY(-12px);
-}
-}
-
-.logo{
-text-align:center;
-margin-bottom:24px;
-}
-
-.logo h1,
-.hero-text h2,
-.section-title,
-.question,
-.result-title,
-.analysis-text,
-.result-section h3,
-.result-level,
-.roadmap-step__title,
-.btn,
-button.btn,
-.progress-meta{
-font-family:var(--font-heading);
-}
-
-.logo h1{
-font-size:var(--font-display);
-font-weight:800;
-letter-spacing:.06em;
-background:linear-gradient(135deg,var(--gold),var(--gold-light));
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;
-}
-
-.subtitle{
-margin-top:10px;
-font-size:15px;
-line-height:1.5;
-color:var(--text-subtle);
-max-width:58ch;
-margin-left:auto;
-margin-right:auto;
-font-family:var(--font-heading);
-font-weight:600;
-letter-spacing:.02em;
-}
-
-.hero{
-display:flex;
-align-items:center;
-gap:22px;
-margin-bottom:28px;
-}
-
-.hero-image{
-flex-shrink:0;
-background:none;
-border:none;
-box-shadow:none;
-border-radius:0;
-overflow:visible;
-width:auto;
-height:auto;
-line-height:0;
-}
-
-.hero-image img{
-width:auto;
-height:auto;
-max-width:100%;
-display:block;
-vertical-align:top;
-}
-
-.hero-text h2{
-font-size:var(--font-h2);
-font-weight:800;
-line-height:1.1;
-letter-spacing:-.01em;
-margin-bottom:16px;
-}
-
-.hero-text p{
-font-size:16px;
-line-height:1.7;
-color:var(--text-muted);
-max-width:58ch;
-}
-
-.btn,
-button.btn{
-border:none;
-cursor:pointer;
-width:100%;
-padding:18px;
-border-radius:var(--radius-btn);
-font-size:15px;
-font-weight:700;
-letter-spacing:.04em;
-text-transform:uppercase;
-transition:transform var(--transition),filter var(--transition),box-shadow var(--transition);
-}
-
-.btn:hover,
-button.btn:hover{
-transform:translateY(-2px);
-}
-
-.btn:active,
-button.btn:active{
-transform:translateY(0);
-}
-
-.btn:focus-visible,
-button.btn:focus-visible{
-outline:2px solid var(--gold);
-outline-offset:3px;
-}
-
-.primary-btn{
-background:linear-gradient(135deg,var(--gold),var(--gold-light));
-color:#1d2736;
-box-shadow:0 10px 25px var(--gold-shadow);
-}
-
-.primary-btn:hover{
-filter:brightness(1.05);
-}
-
-.secondary-btn{
-background:var(--surface);
-border:1px solid var(--gold-border);
-color:var(--text);
-margin-top:14px;
-}
-
-.btn-spaced{
-margin-top:24px;
-}
-
-.btn-spaced-lg{
-margin-top:28px;
-}
-
-.section-title{
-font-size:var(--font-section);
-font-weight:800;
-margin-bottom:20px;
-line-height:1.15;
-letter-spacing:-.02em;
-}
-
-.prose{
-font-size:16px;
-line-height:1.8;
-color:var(--text-muted);
-max-width:58ch;
-}
-
-.email-text{
-margin-bottom:22px;
-}
-
-.input-group{
-margin-bottom:18px;
-}
-
-.input-group input{
-width:100%;
-padding:16px 18px;
-border-radius:var(--radius-input);
-border:1px solid var(--gold-border);
-background:var(--input-bg);
-color:var(--text);
-font-size:15px;
-font-family:inherit;
-outline:none;
-transition:border-color var(--transition),box-shadow var(--transition);
-}
-
-.input-group input::placeholder{
-color:var(--text-subtle);
-}
-
-.input-group input:focus{
-border-color:var(--gold);
-box-shadow:0 0 0 4px var(--gold-soft);
-}
-
-.input-group input:user-invalid:not(:placeholder-shown){
-border-color:#c45c5c;
-box-shadow:0 0 0 4px rgba(196,92,92,.15);
-}
-
-.checkbox{
-display:flex;
-gap:12px;
-align-items:flex-start;
-margin-top:18px;
-cursor:pointer;
-}
-
-.checkbox input{
-position:absolute;
-opacity:0;
-width:0;
-height:0;
-}
-
-.checkbox-box{
-flex-shrink:0;
-width:22px;
-height:22px;
-margin-top:2px;
-border-radius:6px;
-border:2px solid var(--gold-border);
-background:var(--input-bg);
-transition:background var(--transition),border-color var(--transition),box-shadow var(--transition);
-}
-
-.checkbox input:focus-visible + .checkbox-box{
-outline:2px solid var(--gold);
-outline-offset:2px;
-}
-
-.checkbox input:checked + .checkbox-box{
-background:linear-gradient(135deg,var(--gold),var(--gold-light));
-border-color:var(--gold);
-box-shadow:inset 0 0 0 2px var(--input-bg);
-}
-
-.checkbox-label{
-font-size:14px;
-line-height:1.6;
-color:var(--text-muted);
-}
-
-.links{
-margin-top:16px;
-display:flex;
-flex-direction:column;
-gap:8px;
-}
-
-.links a{
-color:var(--link);
-font-size:14px;
-text-decoration:underline;
-text-underline-offset:3px;
-}
-
-.links a:hover{
-color:var(--gold);
-}
-
-.links a:focus-visible{
-outline:2px solid var(--gold);
-outline-offset:2px;
-border-radius:4px;
-}
-
-.quiz-header{
-margin-bottom:20px;
-}
-
-.progress-meta{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
-font-size:13px;
-font-weight:600;
-color:var(--text-subtle);
-letter-spacing:.02em;
-}
-
-.progress{
-width:100%;
-height:10px;
-background:var(--gold-soft);
-border-radius:100px;
-overflow:hidden;
-}
-
-.progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,var(--gold),var(--gold-light));
-border-radius:100px;
-transition:width .35s ease;
-}
-
-.progress--active .progress-bar{
-animation:progressShimmer 1.8s ease-in-out infinite;
-}
-
-@keyframes progressShimmer{
-0%,100%{filter:brightness(1);}
-50%{filter:brightness(1.12);}
-}
-
-.question{
-font-size:var(--font-question);
-font-weight:800;
-line-height:1.2;
-margin-bottom:26px;
-letter-spacing:-.02em;
-}
-
-.answers{
-display:flex;
-flex-direction:column;
-gap:14px;
-}
-
-.answer{
-display:block;
-width:100%;
-padding:18px;
-border-radius:var(--radius-btn);
-background:var(--surface-muted);
-border:1px solid var(--gold-border);
-cursor:pointer;
-transition:transform var(--transition),border-color var(--transition),background var(--transition),box-shadow var(--transition);
-text-align:left;
-line-height:1.6;
-font-size:15px;
-font-family:inherit;
-color:var(--text);
-}
-
-.answer:hover{
-transform:translateY(-2px);
-}
-
-.answer:focus-visible{
-outline:2px solid var(--gold);
-outline-offset:3px;
-}
-
-.answer.selected{
-border:2px solid var(--gold);
-background:var(--gold-soft);
-box-shadow:0 0 0 5px rgba(201,160,61,.08);
-}
-
-.answer--stagger{
-animation:answerIn .4s ease backwards;
-}
-
-@keyframes answerIn{
-from{
-opacity:0;
-transform:translateY(10px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-
-.analysis{
-padding:70px 20px;
-text-align:center;
-}
-
-.dna{
-font-size:64px;
-margin-bottom:24px;
-display:inline-block;
-animation:dnaSpin 6s linear infinite;
-}
-
-@keyframes dnaSpin{
-from{transform:rotate(0deg);}
-to{transform:rotate(360deg);}
-}
-
-.analysis-text{
-font-size:24px;
-font-weight:700;
-line-height:1.4;
-max-width:28ch;
-margin:0 auto;
-}
-
-.result-title{
-font-size:var(--font-display);
-font-weight:800;
-margin-bottom:18px;
-letter-spacing:-.02em;
-}
-
-.result-level{
-display:inline-flex;
-align-items:center;
-gap:10px;
-padding:12px 20px;
-border-radius:100px;
-background:var(--gold-soft);
-color:var(--link);
-font-weight:700;
-font-size:14px;
-letter-spacing:.04em;
-margin-bottom:24px;
-border:1px solid var(--gold-border);
-}
-
-.result-level::before{
-content:"";
-width:8px;
-height:8px;
-border-radius:50%;
-background:var(--gold);
-flex-shrink:0;
-}
-
-.result-level[data-level="manual"]::before{background:#e07a4a;}
-.result-level[data-level="unstable"]::before{background:#d4a03d;}
-.result-level[data-level="boost"]::before{background:var(--gold);}
-.result-level[data-level="growth"]::before{background:#5cb87a;}
-
-.result-section{
-margin-top:26px;
-}
-
-.result-section h3{
-margin-bottom:12px;
-font-size:18px;
-font-weight:700;
-}
-
-.result-section p{
-line-height:1.8;
-color:var(--text-muted);
-max-width:58ch;
-}
-
-.roadmap{
-margin-top:16px;
-padding-left:8px;
-}
-
-.roadmap-step{
-position:relative;
-padding:16px 16px 16px 28px;
-border-radius:var(--radius-input);
-background:var(--surface);
-border:1px solid var(--gold-border);
-margin-bottom:0;
-opacity:0;
-transform:translateY(28px) scale(.94);
-}
-
-.roadmap--visible .roadmap-step{
-animation:roadmapPop .55s cubic-bezier(.22,1.2,.36,1) forwards;
-}
-
-.roadmap--visible .roadmap-step:nth-child(1){animation-delay:.08s;}
-.roadmap--visible .roadmap-step:nth-child(2){animation-delay:.2s;}
-.roadmap--visible .roadmap-step:nth-child(3){animation-delay:.32s;}
-.roadmap--visible .roadmap-step:nth-child(4){animation-delay:.44s;}
-
-@keyframes roadmapPop{
-from{
-opacity:0;
-transform:translateY(28px) scale(.94);
-}
-to{
-opacity:1;
-transform:translateY(0) scale(1);
-}
-}
-
-.roadmap-step:not(:last-child){
-margin-bottom:12px;
-}
-
-.roadmap-step::before{
-content:"";
-position:absolute;
-left:10px;
-top:22px;
-width:10px;
-height:10px;
-border-radius:50%;
-background:var(--gold);
-box-shadow:0 0 0 4px var(--gold-soft);
-}
-
-.roadmap-step:not(:last-child)::after{
-content:"";
-position:absolute;
-left:14px;
-top:36px;
-bottom:-14px;
-width:2px;
-background:var(--gold-border);
-}
-
-.roadmap-step__title{
-display:block;
-font-weight:700;
-font-size:13px;
-letter-spacing:.04em;
-color:var(--gold);
-margin-bottom:6px;
-}
-
-.roadmap-step__desc{
-display:block;
-font-size:14px;
-line-height:1.6;
-color:var(--text-muted);
-}
-
-.hidden{
-display:none !important;
-}
-
-.footer{
-margin-top:40px;
-text-align:center;
-font-size:13px;
-color:var(--text-footer);
-}
-
-.pdf-sheet{
-position:absolute;
-left:-9999px;
-top:0;
-width:800px;
-min-height:1120px;
-box-sizing:border-box;
-overflow:hidden;
-font-family:var(--font-body);
-color:var(--text);
-}
-
-.pdf-bg{
-position:absolute;
-inset:0;
-background:
-radial-gradient(ellipse 110% 95% at 50% 42%,#ffffff 0%,#fcf9f6 22%,#f6f0e8 48%,#efe6dc 72%,#e6ddd2 100%),
-radial-gradient(ellipse 140% 100% at 50% 50%,transparent 42%,rgba(228,218,206,.35) 100%),
-radial-gradient(ellipse 55% 45% at 78% 35%,rgba(240,228,218,.5),transparent 60%),
-radial-gradient(ellipse 40% 35% at 12% 68%,rgba(201,160,61,.07),transparent 55%);
-z-index:0;
-}
-
-.pdf-content{
-position:relative;
-z-index:1;
-padding:48px;
-}
-
-.pdf-header{
-margin-bottom:36px;
-padding-bottom:28px;
-border-bottom:1px solid rgba(201,160,61,.2);
-}
-
-.pdf-title{
-font-family:var(--font-heading);
-font-size:40px;
-font-weight:800;
-letter-spacing:.06em;
-margin-bottom:10px;
-background:linear-gradient(135deg,#C9A03D,#e2c36c);
--webkit-background-clip:text;
-background-clip:text;
-color:transparent;
-}
-
-.pdf-subtitle{
-font-family:var(--font-heading);
-font-size:18px;
-font-weight:600;
-color:var(--text-subtle);
-}
-
-.pdf-block{
-background:linear-gradient(152deg,rgba(255,255,255,.96) 0%,rgba(252,247,241,.94) 38%,rgba(245,238,229,.92) 100%);
-border:1px solid rgba(255,255,255,.85);
-border-radius:20px;
-padding:24px 28px;
-margin-bottom:22px;
-box-shadow:0 12px 40px rgba(160,135,110,.12),inset 0 1px 0 rgba(255,255,255,.9);
-}
-
-.pdf-block h2{
-font-family:var(--font-heading);
-font-size:22px;
-font-weight:700;
-color:var(--text);
-margin-bottom:12px;
-}
-
-.pdf-level{
-font-family:var(--font-heading);
-font-size:28px;
-font-weight:800;
-color:#C9A03D;
-letter-spacing:.03em;
-}
-
-.pdf-text{
-font-size:16px;
-line-height:1.8;
-color:var(--text-muted);
-}
-
-.pdf-footer{
-margin-top:36px;
-padding-top:28px;
-border-top:1px solid rgba(201,160,61,.18);
-}
-
-.pdf-footer-title{
-font-family:var(--font-heading);
-font-size:18px;
-font-weight:700;
-color:#C9A03D;
-margin-bottom:14px;
-}
-
-.pdf-footer-text{
-font-size:16px;
-line-height:1.75;
-color:var(--text-muted);
-margin-bottom:16px;
-}
-
-.pdf-footer-link{
-font-family:var(--font-heading);
-font-size:15px;
-font-weight:600;
-color:#7a5f12;
-}
-
-@media(max-width:720px){
-
-.hero{
-flex-direction:column;
-text-align:center;
-}
-
-.hero-image{
-align-self:center;
-}
-
-.hero-text p{
-margin-left:auto;
-margin-right:auto;
-}
-
-.hero-text h2{
-font-size:32px;
-}
-
-.question{
-font-size:24px;
-}
-
-}
-
-@media(max-width:480px){
-
-.container{
-padding:16px 14px calc(72px + env(safe-area-inset-bottom));
-}
-
-.card{
-padding:20px;
-border-radius:24px;
-}
-
-.btn,
-button.btn{
-padding:16px;
-font-size:15px;
-}
-
-.logo h1,
-.result-title{
-font-size:28px;
-}
-
-.section-title{
-font-size:24px;
-}
-
-}
-
-@media(prefers-reduced-motion:reduce){
-
-*,*::before,*::after{
-animation-duration:.01ms !important;
-animation-iteration-count:1 !important;
-transition-duration:.01ms !important;
-}
-
-html{
-scroll-behavior:auto;
-}
-
-.card--entering,
-.card--leaving,
-.answer--stagger,
-.dna,
-.roadmap--visible .roadmap-step{
-animation:none !important;
-}
-
-.roadmap--visible .roadmap-step,
-.roadmap-step{
-opacity:1;
-transform:none;
-}
-
-.btn:hover,
-.answer:hover{
-transform:none;
-}
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Геном Роста — Лаборатория роста бизнеса</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(ellipse 110% 95% at 50% 42%, #ffffff 0%, #fcf9f6 22%, #f6f0e8 48%, #efe6dc 72%, #e6ddd2 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #1d2736;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 140% 100% at 50% 50%, transparent 42%, rgba(228, 218, 206, 0.35) 100%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 55% 45% at 78% 35%, rgba(240, 228, 218, 0.5), transparent 60%),
+                  radial-gradient(ellipse 40% 35% at 12% 68%, rgba(201, 160, 61, 0.07), transparent 55%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 18px calc(80px + env(safe-area-inset-bottom));
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: linear-gradient(152deg, rgba(255, 255, 255, 0.96) 0%, rgba(252, 247, 241, 0.94) 38%, rgba(245, 238, 229, 0.92) 100%);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 40px rgba(160, 135, 110, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      transition: all 0.2s ease;
+    }
+
+    .card--entering {
+      animation: fadeUp 0.45s ease forwards;
+    }
+
+    .card--leaving {
+      animation: fadeOut 0.22s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translateY(-12px);
+      }
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .logo h1 {
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #5d6877;
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-weight: 600;
+    }
+
+    /* hero-блок: центрирование, изображение без скруглений, полностью видимое */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .hero-image {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+      border-radius: 0 !important;        /* убираем любые скругления */
+      overflow: visible;
+      line-height: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .hero-image img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0 !important;        /* у изображения нет скруглений */
+      box-shadow: none;
+    }
+
+    .hero-text h2 {
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+
+    .hero-text p {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #536173;
+      max-width: 58ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn, button.btn {
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      padding: 18px;
+      border-radius: 18px;
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .btn:hover, button.btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.02);
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      color: #1d2736;
+      box-shadow: 0 10px 25px rgba(201, 160, 61, 0.28);
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(201, 160, 61, 0.25);
+      color: #1d2736;
+    }
+
+    .btn-spaced {
+      margin-top: 24px;
+    }
+
+    .section-title {
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(201, 160, 61, 0.25);
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: #C9A03D;
+      box-shadow: 0 0 0 4px rgba(201, 160, 61, 0.12);
+    }
+
+    .checkbox {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+
+    .checkbox input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .checkbox-box {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      border-radius: 6px;
+      border: 2px solid rgba(201, 160, 61, 0.35);
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
+      transition: all 0.2s;
+    }
+
+    .checkbox input:checked + .checkbox-box {
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      border-color: #C9A03D;
+      box-shadow: inset 0 0 0 2px #fff8f0;
+    }
+
+    .checkbox-label {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #536173;
+    }
+
+    .links {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .links a {
+      color: #7a5f12;
+      font-size: 14px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .links a:hover {
+      color: #C9A03D;
+    }
+
+    .quiz-header {
+      margin-bottom: 20px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #5d6877;
+      font-family: 'Manrope', system-ui, sans-serif;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      background: rgba(201, 160, 61, 0.12);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #C9A03D, #e2c36c);
+      border-radius: 100px;
+      transition: width 0.35s ease;
+    }
+
+    .question {
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 26px;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .answer {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(201, 160, 61, 0.2);
+      cursor: pointer;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.6;
+      font-family: inherit;
+      color: #1d2736;
+      transition: all 0.2s;
+    }
+
+    .answer:hover {
+      transform: translateY(-2px);
+      background: rgba(201, 160, 61, 0.05);
+    }
+
+    .answer.selected {
+      border: 2px solid #C9A03D;
+      background: rgba(201, 160, 61, 0.12);
+      box-shadow: 0 0 0 4px rgba(201, 160, 61, 0.08);
+    }
+
+    .analysis {
+      text-align: center;
+      padding: 70px 20px;
+    }
+
+    .dna {
+      font-size: 64px;
+      margin-bottom: 24px;
+      display: inline-block;
+      animation: dnaSpin 6s linear infinite;
+    }
+
+    @keyframes dnaSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .analysis-text {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: 'Manrope', system-ui, sans-serif;
+      line-height: 1.4;
+    }
+
+    .result-title {
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .result-level {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 100px;
+      background: rgba(201, 160, 61, 0.12);
+      color: #7a5f12;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      margin-bottom: 24px;
+      border: 1px solid rgba(201, 160, 61, 0.25);
+    }
+
+    .result-level::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #C9A03D;
+    }
+
+    .result-section {
+      margin-top: 26px;
+    }
+
+    .result-section h3 {
+      font-family: 'Manrope', system-ui, sans-serif;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .result-section p {
+      line-height: 1.8;
+      color: #536173;
+    }
+
+    .roadmap {
+      margin-top: 16px;
+      padding-left: 8px;
+    }
+
+    .roadmap-step {
+      position: relative;
+      padding: 16px 16px 16px 32px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(201, 160, 61, 0.2);
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+    }
+
+    .roadmap--visible .roadmap-step {
+      animation: roadmapPop 0.55s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
+    }
+
+    .roadmap--visible .roadmap-step:nth-child(1) { animation-delay: 0.08s; }
+    .roadmap--visible .roadmap-step:nth-child(2) { animation-delay: 0.2s; }
+    .roadmap--visible .roadmap-step:nth-child(3) { animation-delay: 0.32s; }
+    .roadmap--visible .roadmap-step:nth-child(4) { animation-delay: 0.44s; }
+
+    @keyframes roadmapPop {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.94);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .roadmap-step::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 22px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #C9A03D;
+      box-shadow: 0 0 0 4px rgba(201, 160, 61, 0.2);
+    }
+
+    .roadmap-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 38px;
+      bottom: -14px;
+      width: 2px;
+      background: rgba(201, 160, 61, 0.25);
+    }
+
+    .roadmap-step__title {
+      display: block;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: #C9A03D;
+      margin-bottom: 6px;
+      font-family: 'Manrope', system-ui, sans-serif;
+    }
+
+    .roadmap-step__desc {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #5d6877;
+    }
+
+    .prose {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #536173;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 13px;
+      color: #7a8797;
+    }
+
+    .pdf-sheet {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 800px;
+      min-height: 1120px;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 720px) {
+      .hero-text h2 {
+        font-size: 30px;
+      }
+      .question {
+        font-size: 24px;
+      }
+      .card {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 16px 14px 72px;
+      }
+      .logo h1, .result-title {
+        font-size: 28px;
+      }
+      .hero-image img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
 <div class="container">
 
-<!-- INTRO -->
+  <!-- ЭКРАН INTRO (исправлен: hero.jpg по центру, без скруглений) -->
+  <div class="card" id="screenIntro">
+    <div class="logo">
+      <h1>ГЕНОМ РОСТА</h1>
+      <div class="subtitle">Интерактивная диагностика архитектуры бизнеса</div>
+    </div>
 
-<div class="card" id="screenIntro">
+    <div class="hero">
+      <div class="hero-image">
+        <img src="hero.jpg" alt="Лаборатория роста бизнеса">
+      </div>
+      <div class="hero-text">
+        <h2>Лаборатория роста бизнеса</h2>
+        <p>
+          Система определит, что именно тормозит рост вашего бизнеса, и покажет точки усиления:<br>
+          контент, упаковку, воронку, смыслы и автоматизацию.
+        </p>
+      </div>
+    </div>
 
-<div class="logo">
-<h1>ГЕНОМ РОСТА</h1>
+    <button type="button" class="primary-btn btn" onclick="goToScreen('screenConsent')">НАЧАТЬ ДИАГНОСТИКУ</button>
+  </div>
 
-<div class="subtitle">
-Интерактивная диагностика архитектуры бизнеса
-</div>
-</div>
+  <!-- СОГЛАСИЕ -->
+  <div class="card hidden" id="screenConsent">
+    <div class="section-title">Перед запуском диагностики</div>
+    <div class="input-group">
+      <input type="text" id="userName" placeholder="Ваше имя">
+    </div>
+    <label class="checkbox">
+      <input type="checkbox" id="pdConsent">
+      <span class="checkbox-box" aria-hidden="true"></span>
+      <span class="checkbox-label">Я даю согласие на обработку персональных данных</span>
+    </label>
+    <div class="links">
+      <a href="https://moskovchukproonline.tilda.ws/consentprivacy" target="_blank">Согласие на обработку персональных данных</a>
+      <a href="https://moskovchukproonline.tilda.ws/privacypolicy" target="_blank">Политика конфиденциальности</a>
+    </div>
+    <button type="button" class="primary-btn btn btn-spaced" onclick="startTest()">ПРОДОЛЖИТЬ</button>
+  </div>
 
-<div class="hero">
+  <!-- ВОПРОСЫ -->
+  <div class="card hidden" id="screenQuestion">
+    <div class="quiz-header">
+      <div class="progress-meta">
+        <span id="questionCounter">1 из 7</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+    <div class="question" id="questionText"></div>
+    <div class="answers" id="answersContainer"></div>
+  </div>
 
-<div class="hero-image">
-<img src="hero.jpg" alt="Лаборатория роста бизнеса">
-</div>
+  <!-- АНАЛИЗ -->
+  <div class="card hidden" id="screenAnalysis">
+    <div class="analysis">
+      <div class="dna">🧬</div>
+      <div class="analysis-text" id="analysisText">Анализируем архитектуру бизнеса…</div>
+    </div>
+  </div>
 
-<div class="hero-text">
+  <!-- РЕЗУЛЬТАТ -->
+  <div class="card hidden" id="screenResult">
+    <div class="result-title">Ваш геном роста</div>
+    <div class="result-level" id="resultLevel" data-level="growth"></div>
+    <div class="result-section">
+      <h3>Главный системный сбой</h3>
+      <p id="mainProblem"></p>
+    </div>
+    <div class="result-section">
+      <h3>Ключевой ген роста</h3>
+      <p id="growthGene"></p>
+    </div>
+    <div class="result-section">
+      <h3>Карта эволюции</h3>
+      <div class="roadmap" id="roadmapContainer">
+        <div class="roadmap-step"><span class="roadmap-step__title">СТАБИЛИЗАЦИЯ</span><span class="roadmap-step__desc">Убираем хаос и собираем фундамент системы</span></div>
+        <div class="roadmap-step"><span class="roadmap-step__title">УСИЛЕНИЕ</span><span class="roadmap-step__desc">Докручиваем упаковку, смыслы и воронку</span></div>
+        <div class="roadmap-step"><span class="roadmap-step__title">АВТОМАТИЗАЦИЯ</span><span class="roadmap-step__desc">Система начинает поддерживать продажи</span></div>
+        <div class="roadmap-step"><span class="roadmap-step__title">ЭКОСИСТЕМА</span><span class="roadmap-step__desc">Масштабирование через digital-механики</span></div>
+      </div>
+    </div>
+    <button type="button" class="primary-btn btn btn-spaced-lg" onclick="goToScreen('screenEmail')">СОХРАНИТЬ ГЕНОМ</button>
+  </div>
 
-<h2>Лаборатория роста бизнеса</h2>
+  <!-- EMAIL -->
+  <div class="card hidden" id="screenEmail">
+    <div class="section-title">Сохранение генома</div>
+    <div class="email-text prose">
+      🧬 Система может сохранить вашу карту роста и коды усиления бизнеса.<br><br>
+      Укажите адрес электронной почты, чтобы получить доступ к материалам лаборатории.
+    </div>
+    <div class="input-group">
+      <input type="email" id="userEmail" placeholder="Адрес электронной почты">
+    </div>
+    <label class="checkbox">
+      <input type="checkbox" id="mailConsent">
+      <span class="checkbox-box" aria-hidden="true"></span>
+      <span class="checkbox-label">Я даю согласие на получение рассылок с полезными материалами и обновлениями лаборатории</span>
+    </label>
+    <div class="links">
+      <a href="https://moskovchukproonline.tilda.ws/consentpromo" target="_blank">Согласие на получение рассылок</a>
+    </div>
+    <button type="button" class="primary-btn btn btn-spaced" onclick="saveLeadAndDownload()">СКАЧАТЬ PDF</button>
+  </div>
 
-<p>
-Система определит,
-что именно тормозит рост вашего бизнеса,
-и покажет точки усиления:
-контент,
-упаковку,
-воронку,
-смыслы
-и автоматизацию.
-</p>
-
-</div>
-
-</div>
-
-<button type="button" class="primary-btn btn" onclick="goToScreen('screenConsent')">
-НАЧАТЬ ДИАГНОСТИКУ
-</button>
-
-</div>
-
-<!-- CONSENT -->
-
-<div class="card hidden" id="screenConsent">
-
-<div class="section-title">
-Перед запуском диагностики
-</div>
-
-<div class="input-group">
-<input type="text" id="userName" placeholder="Ваше имя">
-</div>
-
-<label class="checkbox">
-<input type="checkbox" id="pdConsent">
-<span class="checkbox-box" aria-hidden="true"></span>
-<span class="checkbox-label">
-Я даю согласие на обработку персональных данных
-</span>
-</label>
-
-<div class="links">
-
-<a href="https://moskovchukproonline.tilda.ws/consentprivacy" target="_blank">
-Согласие на обработку персональных данных
-</a>
-
-<a href="https://moskovchukproonline.tilda.ws/privacypolicy" target="_blank">
-Политика конфиденциальности
-</a>
-
-</div>
-
-<button type="button" class="primary-btn btn btn-spaced" onclick="startTest()">
-ПРОДОЛЖИТЬ
-</button>
-
-</div>
-
-<!-- QUESTIONS -->
-
-<div class="card hidden" id="screenQuestion">
-
-<div class="quiz-header">
-<div class="progress-meta">
-<span id="questionCounter">1 из 7</span>
-<span id="progressPercent">0%</span>
-</div>
-<div class="progress" id="progressTrack" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Прогресс диагностики">
-<div class="progress-bar" id="progressBar"></div>
-</div>
-</div>
-
-<div class="question" id="questionText"></div>
-
-<div class="answers" id="answersContainer"></div>
-
-</div>
-
-<!-- ANALYSIS -->
-
-<div class="card hidden" id="screenAnalysis">
-
-<div class="analysis">
-
-<div class="dna">🧬</div>
-
-<div class="analysis-text" id="analysisText">
-Анализируем архитектуру бизнеса…
-</div>
-
-</div>
-
-</div>
-
-<!-- RESULT -->
-
-<div class="card hidden" id="screenResult">
-
-<div class="result-title">
-Ваш геном роста
+  <!-- ФИНАЛ -->
+  <div class="card hidden" id="screenFinal">
+    <div class="section-title">🧬 Геном роста сохранён</div>
+    <div class="email-text prose">
+      Лаборатория продолжает публиковать:<br><br>
+      — механики роста<br>— системы продвижения<br>— автоматизацию бизнеса<br>— разборы и стратегии
+    </div>
+    <button type="button" class="secondary-btn btn" onclick="window.open('https://max.ru/id772773475390_biz','_blank')">ПЕРЕЙТИ В ЛАБОРАТОРИЮ</button>
+    <div class="footer">Лаборатория роста бизнеса</div>
+  </div>
 </div>
 
-<div class="result-level" id="resultLevel"></div>
-
-<div class="result-section">
-<h3>Главный системный сбой</h3>
-<p id="mainProblem"></p>
-</div>
-
-<div class="result-section">
-<h3>Ключевой ген роста</h3>
-<p id="growthGene"></p>
-</div>
-
-<div class="result-section">
-
-<h3>Карта эволюции</h3>
-
-<div class="roadmap">
-
-<div class="roadmap-step">
-<span class="roadmap-step__title">СТАБИЛИЗАЦИЯ</span>
-<span class="roadmap-step__desc">Убираем хаос и собираем фундамент системы</span>
-</div>
-
-<div class="roadmap-step">
-<span class="roadmap-step__title">УСИЛЕНИЕ</span>
-<span class="roadmap-step__desc">Докручиваем упаковку, смыслы и воронку</span>
-</div>
-
-<div class="roadmap-step">
-<span class="roadmap-step__title">АВТОМАТИЗАЦИЯ</span>
-<span class="roadmap-step__desc">Система начинает поддерживать продажи</span>
-</div>
-
-<div class="roadmap-step">
-<span class="roadmap-step__title">ЭКОСИСТЕМА</span>
-<span class="roadmap-step__desc">Масштабирование через digital-механики</span>
-</div>
-
-</div>
-
-</div>
-
-<button type="button" class="primary-btn btn btn-spaced-lg" onclick="goToScreen('screenEmail')">
-СОХРАНИТЬ ГЕНОМ
-</button>
-
-</div>
-
-<!-- EMAIL -->
-
-<div class="card hidden" id="screenEmail">
-
-<div class="section-title">
-Сохранение генома
-</div>
-
-<div class="email-text prose">
-
-🧬 Система может сохранить
-вашу карту роста и коды усиления бизнеса.
-
-<br><br>
-
-Укажите адрес электронной почты,
-чтобы получить доступ к материалам лаборатории.
-
-</div>
-
-<div class="input-group">
-<input type="email" id="userEmail" placeholder="Адрес электронной почты">
-</div>
-
-<label class="checkbox">
-<input type="checkbox" id="mailConsent">
-<span class="checkbox-box" aria-hidden="true"></span>
-<span class="checkbox-label">
-Я даю согласие на получение рассылок
-с полезными материалами и обновлениями лаборатории
-</span>
-</label>
-
-<div class="links">
-
-<a href="https://moskovchukproonline.tilda.ws/consentpromo" target="_blank">
-Согласие на получение рассылок
-</a>
-
-</div>
-
-<button type="button" class="primary-btn btn btn-spaced" onclick="saveLeadAndDownload()">
-СКАЧАТЬ PDF
-</button>
-
-</div>
-
-<!-- FINAL -->
-
-<div class="card hidden" id="screenFinal">
-
-<div class="section-title">
-🧬 Геном роста сохранён
-</div>
-
-<div class="email-text prose">
-
-Лаборатория продолжает публиковать:
-<br><br>
-
-— механики роста<br>
-— системы продвижения<br>
-— автоматизацию бизнеса<br>
-— разборы и стратегии<br>
-
-</div>
-
-<button type="button" class="secondary-btn btn"
-onclick="window.open('https://max.ru/id772773475390_biz','_blank')">
-ПЕРЕЙТИ В ЛАБОРАТОРИЮ
-</button>
-
-<div class="footer">
-Лаборатория роста бизнеса
-</div>
-
-</div>
-
-</div>
-
-<!-- PDF TEMPLATE -->
-
+<!-- PDF-шаблон -->
 <div id="pdfTemplate" class="pdf-sheet">
-
-<div class="pdf-bg" aria-hidden="true"></div>
-
-<div class="pdf-content">
-
-<div class="pdf-header">
-<h1 class="pdf-title">🧬 ГЕНОМ РОСТА</h1>
-<p class="pdf-subtitle">Персональная диагностика системы бизнеса</p>
-</div>
-
-<div class="pdf-block">
-<h2>Ваш уровень</h2>
-<p id="pdfLevel" class="pdf-level"></p>
-</div>
-
-<div class="pdf-block">
-<h2>Главный системный сбой</h2>
-<p id="pdfProblem" class="pdf-text"></p>
-</div>
-
-<div class="pdf-block">
-<h2>Ключевой ген роста</h2>
-<p id="pdfGene" class="pdf-text"></p>
-</div>
-
-<div class="pdf-footer">
-<p class="pdf-footer-title">Продолжить эволюцию бизнеса →</p>
-<p class="pdf-footer-text">
-Лаборатория публикует:<br>
-— механики роста<br>
-— системы продвижения<br>
-— автоматизацию бизнеса
-</p>
-<p class="pdf-footer-link">MAX: https://max.ru/id772773475390_biz</p>
-</div>
-
-</div>
-
+  <div style="background: #f6f0e8; padding: 48px; font-family: 'Inter', sans-serif;">
+    <h1 style="font-family: 'Manrope', sans-serif; font-size: 40px; font-weight:800; background: linear-gradient(135deg,#C9A03D,#e2c36c); -webkit-background-clip:text; background-clip:text; color:transparent;">🧬 ГЕНОМ РОСТА</h1>
+    <p style="font-size: 18px; color:#5d6877; margin-bottom: 36px;">Персональная диагностика системы бизнеса</p>
+    <div style="background: white; border-radius: 20px; padding: 24px; margin-bottom: 20px;">
+      <h2 style="font-family: 'Manrope'; font-size: 22px;">Ваш уровень</h2>
+      <p id="pdfLevel" style="font-size: 28px; font-weight:800; color:#C9A03D;"></p>
+    </div>
+    <div style="background: white; border-radius: 20px; padding: 24px; margin-bottom: 20px;">
+      <h2 style="font-family: 'Manrope'; font-size: 22px;">Главный системный сбой</h2>
+      <p id="pdfProblem" style="line-height:1.7; color:#536173;"></p>
+    </div>
+    <div style="background: white; border-radius: 20px; padding: 24px; margin-bottom: 20px;">
+      <h2 style="font-family: 'Manrope'; font-size: 22px;">Ключевой ген роста</h2>
+      <p id="pdfGene" style="line-height:1.7; color:#536173;"></p>
+    </div>
+    <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(201,160,61,0.2);">
+      <p style="font-family:'Manrope'; font-weight:700; color:#C9A03D;">Продолжить эволюцию бизнеса →</p>
+      <p style="color:#536173;">Лаборатория публикует: механики роста, системы продвижения, автоматизацию бизнеса</p>
+      <p style="color:#7a5f12;">MAX: https://max.ru/id772773475390_biz</p>
+    </div>
+  </div>
 </div>
 
 <script>
-
-const questions = [
-
-{
-question:"Что сейчас происходит с продажами через контент?",
-answers:[
-{ text:"Контент есть, но продаж почти нет", score:1 },
-{ text:"Продажи есть, но нестабильно", score:2 },
-{ text:"Контент уже приводит клиентов", score:3 }
-]
-},
-
-{
-question:"Как публикуется контент?",
-answers:[
-{ text:"Без системы и регулярности", score:1 },
-{ text:"Периодически по вдохновению", score:2 },
-{ text:"Есть система публикаций", score:3 }
-]
-},
-
-{
-question:"Сколько времени занимает создание контента?",
-answers:[
-{ text:"Очень много, всё делается вручную", score:1 },
-{ text:"Иногда выматывает", score:2 },
-{ text:"Есть автоматизация и структура", score:3 }
-]
-},
-
-{
-question:"Как аудитория реагирует на контент?",
-answers:[
-{ text:"Почти нет реакции", score:1 },
-{ text:"Есть просмотры, но мало заявок", score:2 },
-{ text:"Контент вызывает диалог и продажи", score:3 }
-]
-},
-
-{
-question:"Насколько понятна ваша ценность?",
-answers:[
-{ text:"Люди не понимают отличия от конкурентов", score:1 },
-{ text:"Иногда сложно объяснить ценность", score:2 },
-{ text:"Позиционирование уже сильное", score:3 }
-]
-},
-
-{
-question:"Насколько понятна целевая аудитория?",
-answers:[
-{ text:"Пока нет чёткого понимания", score:1 },
-{ text:"Есть общее понимание", score:2 },
-{ text:"Портрет клиента уже выстроен", score:3 }
-]
-},
-
-{
-question:"Как выглядит контентная система?",
-answers:[
-{ text:"Много разных тем без единой структуры", score:1 },
-{ text:"Частично есть система", score:2 },
-{ text:"Контент работает как единая архитектура", score:3 }
-]
-}
-
-];
-
-let currentQuestion = 0;
-let totalScore = 0;
-
-function goToScreen(id){
-
-const target = document.getElementById(id);
-const current = document.querySelector('.card:not(.hidden)');
-
-function showTarget(){
-
-document.querySelectorAll('.card').forEach(function(el){
-el.classList.add('hidden');
-el.classList.remove('card--leaving','card--entering');
-});
-
-target.classList.remove('hidden');
-target.classList.add('card--entering');
-
-requestAnimationFrame(function(){
-target.classList.remove('card--entering');
-});
-
-window.scrollTo({ top:0, behavior:'smooth' });
-
-}
-
-if(current && current !== target){
-
-current.classList.add('card--leaving');
-
-setTimeout(showTarget, 220);
-
-}else{
-
-showTarget();
-
-}
-
-}
-
-function startTest(){
-
-const name = document.getElementById('userName').value.trim();
-const consent = document.getElementById('pdConsent').checked;
-
-if(!name){
-alert('Введите имя');
-return;
-}
-
-if(!consent){
-alert('Необходимо согласие на обработку персональных данных');
-return;
-}
-
-goToScreen('screenQuestion');
-
-renderQuestion();
-
-}
-
-function renderQuestion(){
-
-const q = questions[currentQuestion];
-const total = questions.length;
-const percent = Math.round((currentQuestion / total) * 100);
-
-document.getElementById('questionText').innerText = q.question;
-document.getElementById('questionCounter').innerText =
-(currentQuestion + 1) + ' из ' + total;
-document.getElementById('progressPercent').innerText = percent + '%';
-
-const progressBar = document.getElementById('progressBar');
-const progressTrack = document.getElementById('progressTrack');
-
-progressBar.style.width = percent + '%';
-progressTrack.setAttribute('aria-valuenow', String(percent));
-
-const container = document.getElementById('answersContainer');
-container.innerHTML = '';
-
-q.answers.forEach(function(answer, index){
-
-const btn = document.createElement('button');
-btn.type = 'button';
-btn.className = 'answer answer--stagger';
-btn.style.animationDelay = (index * 0.07) + 's';
-btn.innerText = answer.text;
-
-btn.addEventListener('click', function(){
-
-document.querySelectorAll('.answer').forEach(function(el){
-el.classList.remove('selected');
-});
-
-btn.classList.add('selected');
-
-setTimeout(function(){
-
-totalScore += answer.score;
-currentQuestion++;
-
-if(currentQuestion < questions.length){
-
-renderQuestion();
-
-}else{
-
-showAnalysis();
-
-}
-
-},300);
-
-});
-
-container.appendChild(btn);
-
-});
-
-}
-
-function showAnalysis(){
-
-goToScreen('screenAnalysis');
-
-const texts = [
-
-"Анализируем архитектуру бизнеса…",
-"Выявляем системные сбои…",
-"Расшифровываем геном роста…",
-"Определяем коды усиления…",
-"Формируем карту эволюции…"
-
-];
-
-let index = 0;
-
-const interval = setInterval(()=>{
-
-index++;
-
-if(index < texts.length){
-
-document.getElementById('analysisText').innerText = texts[index];
-
-}else{
-
-clearInterval(interval);
-
-setTimeout(showResult,800);
-
-}
-
-},1400);
-
-}
-
-function showResult(){
-
-goToScreen('screenResult');
-
-let level = '';
-let problem = '';
-let gene = '';
-let levelKey = 'growth';
-
-if(totalScore <= 10){
-
-levelKey = 'manual';
-level = 'РУЧНОЙ РЕЖИМ';
-
-problem = 'Система бизнеса пока держится в основном на ручных усилиях. Контент требует слишком много энергии, а продажи не поддерживаются архитектурой системы.';
-
-gene = 'Ваш главный ген роста — системность. Сейчас ключевая задача: собрать фундамент контента, упаковки и воронки в единую структуру.';
-
-}
-
-else if(totalScore <= 15){
-
-levelKey = 'unstable';
-level = 'НЕСТАБИЛЬНАЯ СИСТЕМА';
-
-problem = 'Контент и продажи уже работают, но хаотично. Рост зависит от постоянных запусков, энергии и ручного контроля.';
-
-gene = 'Ваш главный ген роста — усиление смыслов и упаковки. Бизнесу нужна более сильная архитектура продаж.';
-
-}
-
-else if(totalScore <= 18){
-
-levelKey = 'boost';
-level = 'СИСТЕМА УСИЛЕНИЯ';
-
-problem = 'У вас уже есть рабочая база, но система пока не масштабируется на полную мощность.';
-
-gene = 'Ваш главный ген роста — автоматизация и экосистема контента.';
-
-}
-
-else{
-
-levelKey = 'growth';
-level = 'ЭКОСИСТЕМА РОСТА';
-
-problem = 'Система бизнеса уже выстроена и готова к масштабированию через digital-механики и автоматизацию.';
-
-gene = 'Ваш главный ген роста — масштабирование и построение полноценной digital-экосистемы.';
-
-}
-
-const resultLevel = document.getElementById('resultLevel');
-resultLevel.innerText = level;
-resultLevel.dataset.level = levelKey;
-
-document.getElementById('mainProblem').innerText = problem;
-document.getElementById('growthGene').innerText = gene;
-
-const roadmap = document.querySelector('#screenResult .roadmap');
-if(roadmap){
-roadmap.classList.remove('roadmap--visible');
-setTimeout(function(){
-void roadmap.offsetWidth;
-roadmap.classList.add('roadmap--visible');
-},280);
-}
-
-}
-
-const DASHAMAIL_API_URL = 'https://api.dashamail.ru/';
-const DASHAMAIL_API_KEY = '5743dbd0b692e6d0eecf4b9326adad31';
-const DASHAMAIL_LIST_ID = '444613';
-
-function buildDashamailParams(email, userName){
-
-const params = new URLSearchParams({
-method:'lists.add_member',
-api_key:DASHAMAIL_API_KEY,
-list_id:DASHAMAIL_LIST_ID,
-email:email,
-format:'json',
-update:'yes'
-});
-
-if(userName){
-params.set('merge_1',userName);
-}
-
-return params;
-
-}
-
-function submitDashamailViaForm(params){
-
-return new Promise(function(resolve){
-
-let iframe = document.getElementById('dashamailFrame');
-
-if(!iframe){
-iframe = document.createElement('iframe');
-iframe.id = 'dashamailFrame';
-iframe.name = 'dashamailFrame';
-iframe.setAttribute('aria-hidden','true');
-iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
-document.body.appendChild(iframe);
-}
-
-const form = document.createElement('form');
-form.method = 'POST';
-form.action = DASHAMAIL_API_URL;
-form.target = 'dashamailFrame';
-form.acceptCharset = 'UTF-8';
-form.style.display = 'none';
-
-params.forEach(function(value,key){
-const input = document.createElement('input');
-input.type = 'hidden';
-input.name = key;
-input.value = value;
-form.appendChild(input);
-});
-
-document.body.appendChild(form);
-form.submit();
-
-setTimeout(function(){
-form.remove();
-resolve();
-},800);
-
-});
-
-}
-
-async function addSubscriberToDashamail(email, userName){
-
-const params = buildDashamailParams(email, userName);
-
-try{
-
-const response = await fetch(DASHAMAIL_API_URL,{
-method:'POST',
-headers:{
-'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'
-},
-body:params.toString()
-});
-
-if(!response.ok){
-throw new Error('HTTP ' + response.status);
-}
-
-const data = await response.json();
-const errCode = data && data.response && data.response.msg
-? data.response.msg.err_code
-: null;
-
-if(errCode !== 0 && errCode !== '0'){
-console.warn('Dashamail:', data.response.msg.text || data);
-await submitDashamailViaForm(params);
-}
-
-}catch(error){
-
-console.warn('Dashamail fetch, отправка через форму:', error);
-await submitDashamailViaForm(params);
-
-}
-
-}
-
-async function saveLeadAndDownload(){
-
-const email = document.getElementById('userEmail').value.trim();
-const consent = document.getElementById('mailConsent').checked;
-const userName = document.getElementById('userName').value.trim();
-
-if(!email){
-alert('Укажите адрес электронной почты');
-return;
-}
-
-if(!consent){
-alert('Необходимо согласие на получение рассылок');
-return;
-}
-
-await addSubscriberToDashamail(email, userName);
-
-await generatePDF();
-
-goToScreen('screenFinal');
-
-}
-
-async function generatePDF(){
-
-const level =
-document.getElementById('resultLevel').innerText;
-
-const problem =
-document.getElementById('mainProblem').innerText;
-
-const gene =
-document.getElementById('growthGene').innerText;
-
-document.getElementById('pdfLevel').innerText = level;
-document.getElementById('pdfProblem').innerText = problem;
-document.getElementById('pdfGene').innerText = gene;
-
-const pdfElement =
-document.getElementById('pdfTemplate');
-
-const canvas =
-await html2canvas(pdfElement,{
-scale:2,
-useCORS:true,
-backgroundColor:'#f6f0e8',
-logging:false
-});
-
-const imgData =
-canvas.toDataURL('image/png');
-
-const { jsPDF } = window.jspdf;
-
-const pdf =
-new jsPDF('p','mm','a4');
-
-const pageWidth = 210;
-
-const imgWidth = pageWidth;
-
-const imgHeight =
-canvas.height * imgWidth / canvas.width;
-
-pdf.addImage(
-imgData,
-'PNG',
-0,
-0,
-imgWidth,
-imgHeight
-);
-
-pdf.save('genom-rosta.pdf');
-
-}
-
-
-</script>
-
-</body>
-</html>
+  const questions = [
+    { question: "Что сейчас происходит с продажами через контент?", answers: [{ text: "Контент есть, но продаж почти нет", score: 1 }, { text: "Продажи есть, но нестабильно", score: 2 }, { text: "Контент уже приводит клиентов", score: 3 }] },
+    { question: "Как публикуется контент?", answers: [{ text: "Без системы и регулярности", score: 1 }, { text: "Периодически по вдохновению", score: 2 }, { text: "Есть система публикаций", score: 3 }] },
+    { question: "Сколько времени занимает создание контента?", answers: [{ text: "Очень много, всё делается вручную", score: 1 }, { text: "Иногда выматывает", score: 2 }, { text: "Есть автоматизация и структура", score: 3 }] },
+    { question: "Как аудитория реагирует на контент?", answers: [{ text: "Почти нет реакции", score: 1 }, { text: "Есть просмотры, но мало заявок", score: 2 }, { text: "Контент вызывает диалог и продажи", score: 3 }] },
+    { question: "Насколько понятна ваша ценность?", answers: [{ text: "Люди не понимают отличия от конкурентов", score: 1 }, { text: "Иногда сложно объяснить ценность", score: 2 }, { text: "Позиционирование уже сильное", score: 3 }] },
+    { question: "Насколько понятна целевая аудитория?", answers: [{ text: "Пока нет чёткого понимания", score: 1 }, { text: "Есть общее понимание", score: 2 }, { text: "Портрет клиента уже выстроен", score: 3 }] },
+    { question: "Как выглядит контентная система?", answers: [{ text: "Много разных тем без единой структуры", score: 1 }, { text: "Частично есть система", score: 2 }, { text: "Контент работает как единая архитектура", score: 3 }] }
+  ];
+
+  let currentQuestion = 0;
+  let totalScore = 0;
+
+  function goToScreen(id) {
+    const target = document.getElementById(id);
+    const current = document.querySelector('.card:not(.hidden)');
+    function showTarget() {
+      document.querySelectorAll('.card').forEach(el => {
+        el.classList.add('hidden');
+        el.classList.remove('card--leaving', 'card--entering');
+      });
+      target.classList.remove('hidden');
+      target.classList.add('card--entering');
+      requestAnimationFrame(() => target.classList.remove('card--entering'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (current && current !== target) {
+      current.classList.add('card--leaving');
+      setTimeout(showTarget, 220);
+    } else {
+      showTarget();
+    }
+  }
+
+  function startTest() {
+    const name = document.getElementById('userName').value.trim();
+    const consent = document.getElementById('pdConsent').checked;
+    if (!name) { alert('Введите имя'); return; }
+    if (!consent) { alert('Необходимо согласие на обработку персональных данных'); return; }
+    goToScreen('screenQuestion');
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const q = questions[currentQuestion];
+    const total = questions.length;
+    const percent = Math.round((currentQuestion / total) * 100);
+    document.getElementById('questionText').innerText = q.question;
+    document.getElementById('questionCounter').innerText = (currentQuestion + 1) + ' из ' + total;
+    document.getElementById('progressPercent').innerText = percent + '%';
+    document.getElementById('progressBar').style.width = percent + '%';
+    const container = document.getElementById('answersContainer');
+    container.innerHTML = '';
+    q.answers.forEach((answer, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'answer';
+      btn.innerText = answer.text;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.answer').forEach(el => el.classList.remove('selected'));
+        btn.classList.add('selected');
+        setTimeout(() => {
+          totalScore += answer.score;
+          currentQuestion++;
+          if (currentQuestion < questions.length) renderQuestion();
+          else showAnalysis();
+        }, 280);
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  function showAnalysis() {
+    goToScreen('screenAnalysis');
+    const texts = ["Анализируем архитектуру бизнеса…", "Выявляем системные сбои…", "Расшифровываем геном роста…", "Определяем коды усиления…", "Формируем карту эволюции…"];
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx++;
+      if (idx < texts.length) document.getElementById('analysisText').innerText = texts[idx];
+      else { clearInterval(interval); setTimeout(showResult, 800); }
+    }, 1400);
+  }
+
+  function showResult() {
+    goToScreen('screenResult');
+    let level = '', problem = '', gene = '', levelKey = 'growth';
+    if (totalScore <= 10) {
+      levelKey = 'manual'; level = 'РУЧНОЙ РЕЖИМ';
+      problem = 'Система бизнеса пока держится в основном на ручных усилиях. Контент требует слишком много энергии, а продажи не поддерживаются архитектурой системы.';
+      gene = 'Ваш главный ген роста — системность. Сейчас ключевая задача: собрать фундамент контента, упаковки и воронки в единую структуру.';
+    } else if (totalScore <= 15) {
+      levelKey = 'unstable'; level = 'НЕСТАБИЛЬНАЯ СИСТЕМА';
+      problem = 'Контент и продажи уже работают, но хаотично. Рост зависит от постоянных запусков, энергии и ручного контроля.';
+      gene = 'Ваш главный ген роста — усиление смыслов и упаковки. Бизнесу нужна более сильная архитектура продаж.';
+    } else if (totalScore <= 18) {
+      levelKey = 'boost'; level = 'СИСТЕМА УСИЛЕНИЯ';
+      problem = 'У вас уже есть рабочая база, но система пока не масштабируется на полную мощность.';
+      gene = 'Ваш главный ген роста — автоматизация и экосистема контента.';
+    } else {
+      levelKey = 'growth'; level = 'ЭКОСИСТЕМА РОСТА';
+      problem = 'Система бизнеса уже выстроена и готова к масштабированию через digital-механики и автоматизацию.';
+      gene = 'Ваш главный ген роста — масштабирование и построение полноценной digital-экосистемы.';
+    }
+    const levelEl = document.getElementById('resultLevel');
+    levelEl.innerText = level;
+    levelEl.dataset.level = levelKey;
+    document.getElementById('mainProblem').innerText = problem;
+    document.getElementById('growthGene').innerText = gene;
+    const roadmap = document.querySelector('#screenResult .roadmap');
+    if (roadmap) {
+      roadmap.classList.remove('roadmap--visible');
+      setTimeout(() => { roadmap.classList.add('roadmap--visible'); }, 80);
+    }
+  }
+
+  async function saveLeadAndDownload() {
+    const email = document.getElementById('userEmail').value.trim();
+    const consent = document.getElementById('mailConsent').checked;
+    const userName = document.getElementById('userName').value.trim();
+    if (!email) { alert('Укажите адрес электронной почты'); return; }
+    if (!consent) { alert('Необходимо согласие на получение рассылок'); return; }
+    // dashamail отправка
+    try {
+      const
