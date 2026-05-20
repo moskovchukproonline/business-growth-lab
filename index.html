@@ -7,18 +7,10 @@
 
 <title>Геном Роста — Лаборатория роста бизнеса</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script>
-(function(){
-var t=localStorage.getItem('genom-theme');
-if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';
-if(t==='dark')document.documentElement.setAttribute('data-theme','dark');
-})();
-</script>
 
 <style>
 
@@ -33,44 +25,30 @@ if(t==='dark')document.documentElement.setAttribute('data-theme','dark');
 --text-subtle:#5d6877;
 --text-footer:#7a8797;
 --link:#7a5f12;
---bg-gradient:radial-gradient(circle at top left,#ffffff 0%,#eef5ff 35%,#f7f9fc 100%);
+--font-body:'Inter',system-ui,sans-serif;
+--font-heading:'Manrope','Inter',system-ui,sans-serif;
+--bg-base:
+radial-gradient(ellipse 110% 95% at 50% 42%,#ffffff 0%,#fcf9f6 22%,#f6f0e8 48%,#efe6dc 72%,#e6ddd2 100%);
+--bg-edge:
+radial-gradient(ellipse 140% 100% at 50% 50%,transparent 42%,rgba(228,218,206,.35) 100%);
 --bg-glow:
-radial-gradient(circle at 20% 20%,rgba(201,160,61,.12),transparent 30%),
-radial-gradient(circle at 80% 10%,rgba(119,176,255,.12),transparent 30%),
-radial-gradient(circle at 50% 80%,rgba(201,160,61,.08),transparent 35%);
---card-bg:rgba(255,255,255,.78);
---card-border:rgba(255,255,255,.65);
---card-shadow:0 10px 40px rgba(61,84,122,.08);
---surface:#fff;
---surface-muted:rgba(255,255,255,.8);
---input-bg:#fff;
---radius-card:32px;
---radius-btn:22px;
---radius-input:18px;
+radial-gradient(ellipse 55% 45% at 78% 35%,rgba(240,228,218,.5),transparent 60%),
+radial-gradient(ellipse 40% 35% at 12% 68%,rgba(201,160,61,.07),transparent 55%);
+--card-bg:linear-gradient(152deg,rgba(255,255,255,.96) 0%,rgba(252,247,241,.94) 38%,rgba(245,238,229,.92) 100%);
+--card-border:rgba(255,255,255,.85);
+--card-shadow:0 12px 40px rgba(160,135,110,.12),inset 0 1px 0 rgba(255,255,255,.9);
+--surface:linear-gradient(160deg,#ffffff 0%,#faf6f0 100%);
+--surface-muted:linear-gradient(155deg,rgba(255,255,255,.97) 0%,rgba(250,244,236,.95) 100%);
+--input-bg:linear-gradient(180deg,#ffffff 0%,#faf7f2 100%);
+--radius-card:28px;
+--radius-btn:18px;
+--radius-input:14px;
+--radius-hero:10px;
 --font-display:34px;
 --font-h2:34px;
 --font-section:28px;
 --font-question:28px;
 --transition:.25s ease;
-}
-
-[data-theme="dark"]{
---text:#e8edf4;
---text-muted:#a8b4c4;
---text-subtle:#8b97a8;
---text-footer:#6d7a8c;
---link:#e2c36c;
---bg-gradient:radial-gradient(circle at top left,#0c1018 0%,#121a28 40%,#0f141c 100%);
---bg-glow:
-radial-gradient(circle at 20% 20%,rgba(201,160,61,.14),transparent 32%),
-radial-gradient(circle at 80% 10%,rgba(80,130,200,.1),transparent 30%),
-radial-gradient(circle at 50% 80%,rgba(201,160,61,.06),transparent 35%);
---card-bg:rgba(22,30,44,.88);
---card-border:rgba(201,160,61,.12);
---card-shadow:0 12px 48px rgba(0,0,0,.35);
---surface:rgba(28,38,54,.95);
---surface-muted:rgba(32,42,58,.9);
---input-bg:rgba(18,26,38,.9);
 }
 
 *{
@@ -84,90 +62,34 @@ scroll-behavior:smooth;
 }
 
 body{
-font-family:'Inter',sans-serif;
-background:var(--bg-gradient);
+font-family:var(--font-body);
+background:var(--bg-base);
 min-height:100dvh;
 overflow-x:hidden;
 color:var(--text);
-transition:background .35s ease,color .35s ease;
 }
 
 body::before{
 content:"";
 position:fixed;
 inset:0;
-background:var(--bg-glow);
+background:var(--bg-edge);
 pointer-events:none;
-z-index:-2;
-transition:background .35s ease;
+z-index:-3;
 }
 
 body::after{
 content:"";
 position:fixed;
 inset:0;
-opacity:.04;
-background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+background:var(--bg-glow);
 pointer-events:none;
-z-index:-1;
-}
-
-[data-theme="dark"] body::after{
-opacity:.06;
-}
-
-.theme-toggle{
-position:fixed;
-top:max(16px,env(safe-area-inset-top));
-right:max(16px,env(safe-area-inset-right));
-z-index:100;
-display:flex;
-align-items:center;
-gap:8px;
-padding:10px 14px;
-border-radius:100px;
-border:1px solid var(--gold-border);
-background:var(--card-bg);
-backdrop-filter:blur(12px);
--webkit-backdrop-filter:blur(12px);
-color:var(--text);
-font-family:inherit;
-font-size:13px;
-font-weight:600;
-cursor:pointer;
-box-shadow:var(--card-shadow);
-transition:transform var(--transition),box-shadow var(--transition),border-color var(--transition);
-}
-
-@supports not (backdrop-filter:blur(12px)){
-.theme-toggle{
-background:var(--surface);
-}
-}
-
-.theme-toggle:hover{
-transform:translateY(-2px);
-}
-
-.theme-toggle:focus-visible{
-outline:2px solid var(--gold);
-outline-offset:3px;
-}
-
-.theme-toggle__label-dark{
-display:inline;
-}
-
-.theme-toggle__label-light,
-[data-theme="dark"] .theme-toggle__label-dark{
-display:none;
-}
-
-[data-theme="dark"] .theme-toggle__label-light{
-display:inline;
+z-index:-2;
 }
 
 .container{
+position:relative;
+z-index:1;
 width:100%;
 max-width:720px;
 margin:0 auto;
@@ -202,13 +124,9 @@ background:var(--surface);
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(180deg,rgba(255,255,255,.35) 0%,transparent 42%);
+background:linear-gradient(180deg,rgba(255,255,255,.5) 0%,transparent 38%,rgba(245,238,229,.15) 100%);
 pointer-events:none;
 border-radius:inherit;
-}
-
-[data-theme="dark"] .card::before{
-background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,transparent 45%);
 }
 
 .card--entering{
@@ -242,10 +160,25 @@ text-align:center;
 margin-bottom:24px;
 }
 
+.logo h1,
+.hero-text h2,
+.section-title,
+.question,
+.result-title,
+.analysis-text,
+.result-section h3,
+.result-level,
+.roadmap-step__title,
+.btn,
+button.btn,
+.progress-meta{
+font-family:var(--font-heading);
+}
+
 .logo h1{
 font-size:var(--font-display);
 font-weight:800;
-letter-spacing:.04em;
+letter-spacing:.06em;
 background:linear-gradient(135deg,var(--gold),var(--gold-light));
 -webkit-background-clip:text;
 background-clip:text;
@@ -260,6 +193,9 @@ color:var(--text-subtle);
 max-width:58ch;
 margin-left:auto;
 margin-right:auto;
+font-family:var(--font-heading);
+font-weight:600;
+letter-spacing:.02em;
 }
 
 .hero{
@@ -270,25 +206,30 @@ margin-bottom:28px;
 }
 
 .hero-image{
-width:180px;
-height:240px;
-border-radius:28px;
-overflow:hidden;
 flex-shrink:0;
-box-shadow:0 10px 25px rgba(0,0,0,.12);
+background:none;
+border:none;
+box-shadow:none;
+border-radius:0;
+overflow:visible;
+width:auto;
+height:auto;
+line-height:0;
 }
 
 .hero-image img{
-width:100%;
-height:100%;
-object-fit:cover;
+width:auto;
+height:auto;
+max-width:100%;
+display:block;
+vertical-align:top;
 }
 
 .hero-text h2{
 font-size:var(--font-h2);
 font-weight:800;
 line-height:1.1;
-letter-spacing:-.02em;
+letter-spacing:-.01em;
 margin-bottom:16px;
 }
 
@@ -306,10 +247,10 @@ cursor:pointer;
 width:100%;
 padding:18px;
 border-radius:var(--radius-btn);
-font-size:16px;
+font-size:15px;
 font-weight:700;
-letter-spacing:.03em;
-font-family:inherit;
+letter-spacing:.04em;
+text-transform:uppercase;
 transition:transform var(--transition),filter var(--transition),box-shadow var(--transition);
 }
 
@@ -580,26 +521,12 @@ text-align:center;
 font-size:64px;
 margin-bottom:24px;
 display:inline-block;
-animation:dnaPulse 2.2s ease-in-out infinite;
+animation:dnaSpin 6s linear infinite;
 }
 
-@keyframes dnaPulse{
-0%,100%{
-transform:scale(1);
-filter:drop-shadow(0 0 0 transparent);
-}
-50%{
-transform:scale(1.06);
-filter:drop-shadow(0 0 20px rgba(201,160,61,.35));
-}
-}
-
-.analysis--loading .dna{
-animation:dnaPulse 1.4s ease-in-out infinite;
-}
-
-.analysis--loading .analysis-text{
-animation:progressShimmer 1.8s ease-in-out infinite;
+@keyframes dnaSpin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
 }
 
 .analysis-text{
@@ -674,6 +601,28 @@ border-radius:var(--radius-input);
 background:var(--surface);
 border:1px solid var(--gold-border);
 margin-bottom:0;
+opacity:0;
+transform:translateY(28px) scale(.94);
+}
+
+.roadmap--visible .roadmap-step{
+animation:roadmapPop .55s cubic-bezier(.22,1.2,.36,1) forwards;
+}
+
+.roadmap--visible .roadmap-step:nth-child(1){animation-delay:.08s;}
+.roadmap--visible .roadmap-step:nth-child(2){animation-delay:.2s;}
+.roadmap--visible .roadmap-step:nth-child(3){animation-delay:.32s;}
+.roadmap--visible .roadmap-step:nth-child(4){animation-delay:.44s;}
+
+@keyframes roadmapPop{
+from{
+opacity:0;
+transform:translateY(28px) scale(.94);
+}
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+}
 }
 
 .roadmap-step:not(:last-child){
@@ -729,6 +678,119 @@ font-size:13px;
 color:var(--text-footer);
 }
 
+.pdf-sheet{
+position:absolute;
+left:-9999px;
+top:0;
+width:800px;
+min-height:1120px;
+box-sizing:border-box;
+overflow:hidden;
+font-family:var(--font-body);
+color:var(--text);
+}
+
+.pdf-bg{
+position:absolute;
+inset:0;
+background:
+radial-gradient(ellipse 110% 95% at 50% 42%,#ffffff 0%,#fcf9f6 22%,#f6f0e8 48%,#efe6dc 72%,#e6ddd2 100%),
+radial-gradient(ellipse 140% 100% at 50% 50%,transparent 42%,rgba(228,218,206,.35) 100%),
+radial-gradient(ellipse 55% 45% at 78% 35%,rgba(240,228,218,.5),transparent 60%),
+radial-gradient(ellipse 40% 35% at 12% 68%,rgba(201,160,61,.07),transparent 55%);
+z-index:0;
+}
+
+.pdf-content{
+position:relative;
+z-index:1;
+padding:48px;
+}
+
+.pdf-header{
+margin-bottom:36px;
+padding-bottom:28px;
+border-bottom:1px solid rgba(201,160,61,.2);
+}
+
+.pdf-title{
+font-family:var(--font-heading);
+font-size:40px;
+font-weight:800;
+letter-spacing:.06em;
+margin-bottom:10px;
+background:linear-gradient(135deg,#C9A03D,#e2c36c);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+
+.pdf-subtitle{
+font-family:var(--font-heading);
+font-size:18px;
+font-weight:600;
+color:var(--text-subtle);
+}
+
+.pdf-block{
+background:linear-gradient(152deg,rgba(255,255,255,.96) 0%,rgba(252,247,241,.94) 38%,rgba(245,238,229,.92) 100%);
+border:1px solid rgba(255,255,255,.85);
+border-radius:20px;
+padding:24px 28px;
+margin-bottom:22px;
+box-shadow:0 12px 40px rgba(160,135,110,.12),inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.pdf-block h2{
+font-family:var(--font-heading);
+font-size:22px;
+font-weight:700;
+color:var(--text);
+margin-bottom:12px;
+}
+
+.pdf-level{
+font-family:var(--font-heading);
+font-size:28px;
+font-weight:800;
+color:#C9A03D;
+letter-spacing:.03em;
+}
+
+.pdf-text{
+font-size:16px;
+line-height:1.8;
+color:var(--text-muted);
+}
+
+.pdf-footer{
+margin-top:36px;
+padding-top:28px;
+border-top:1px solid rgba(201,160,61,.18);
+}
+
+.pdf-footer-title{
+font-family:var(--font-heading);
+font-size:18px;
+font-weight:700;
+color:#C9A03D;
+margin-bottom:14px;
+}
+
+.pdf-footer-text{
+font-size:16px;
+line-height:1.75;
+color:var(--text-muted);
+margin-bottom:16px;
+}
+
+.pdf-footer-link{
+font-family:var(--font-heading);
+font-size:15px;
+font-weight:600;
+color:#7a5f12;
+}
+
 @media(max-width:720px){
 
 .hero{
@@ -736,14 +798,13 @@ flex-direction:column;
 text-align:center;
 }
 
+.hero-image{
+align-self:center;
+}
+
 .hero-text p{
 margin-left:auto;
 margin-right:auto;
-}
-
-.hero-image{
-width:200px;
-height:260px;
 }
 
 .hero-text h2{
@@ -767,11 +828,6 @@ padding:20px;
 border-radius:24px;
 }
 
-.theme-toggle{
-padding:8px 12px;
-font-size:12px;
-}
-
 .btn,
 button.btn{
 padding:16px;
@@ -785,13 +841,6 @@ font-size:28px;
 
 .section-title{
 font-size:24px;
-}
-
-.hero-image{
-width:100%;
-max-width:280px;
-height:auto;
-aspect-ratio:3/4;
 }
 
 }
@@ -811,13 +860,19 @@ scroll-behavior:auto;
 .card--entering,
 .card--leaving,
 .answer--stagger,
-.dna{
+.dna,
+.roadmap--visible .roadmap-step{
 animation:none !important;
 }
 
+.roadmap--visible .roadmap-step,
+.roadmap-step{
+opacity:1;
+transform:none;
+}
+
 .btn:hover,
-.answer:hover,
-.theme-toggle:hover{
+.answer:hover{
 transform:none;
 }
 
@@ -827,11 +882,6 @@ transform:none;
 </head>
 
 <body>
-
-<button type="button" class="theme-toggle" id="themeToggle" aria-label="Переключить тему оформления" title="Тёмная тема">
-<span class="theme-toggle__label-dark" aria-hidden="true">☽ Тёмная</span>
-<span class="theme-toggle__label-light" aria-hidden="true">☀ Светлая</span>
-</button>
 
 <div class="container">
 
@@ -1090,115 +1140,41 @@ onclick="window.open('https://max.ru/id772773475390_biz','_blank')">
 
 <!-- PDF TEMPLATE -->
 
-<div id="pdfTemplate" style="
-position:absolute;
-left:-9999px;
-width:800px;
-padding:40px;
-background:#ffffff;
-font-family:Inter,sans-serif;
-color:#1d2736;
-">
+<div id="pdfTemplate" class="pdf-sheet">
 
-<h1 style="
-font-size:40px;
-margin-bottom:10px;
-color:#C9A03D;
-">
-🧬 ГЕНОМ РОСТА
-</h1>
+<div class="pdf-bg" aria-hidden="true"></div>
 
-<p style="font-size:18px;margin-bottom:30px;">
-Персональная диагностика системы бизнеса
-</p>
+<div class="pdf-content">
 
-<div style="
-background:#f8f8f8;
-padding:24px;
-border-radius:24px;
-margin-bottom:24px;
-">
-
-<h2 style="font-size:24px;margin-bottom:12px;">
-Ваш уровень:
-</h2>
-
-<p id="pdfLevel"
-style="font-size:28px;font-weight:700;color:#C9A03D;">
-</p>
-
+<div class="pdf-header">
+<h1 class="pdf-title">🧬 ГЕНОМ РОСТА</h1>
+<p class="pdf-subtitle">Персональная диагностика системы бизнеса</p>
 </div>
 
-<div style="
-background:#f8f8f8;
-padding:24px;
-border-radius:24px;
-margin-bottom:24px;
-">
-
-<h2 style="font-size:24px;margin-bottom:14px;">
-Главный системный сбой
-</h2>
-
-<p id="pdfProblem"
-style="line-height:1.8;font-size:16px;">
-</p>
-
+<div class="pdf-block">
+<h2>Ваш уровень</h2>
+<p id="pdfLevel" class="pdf-level"></p>
 </div>
 
-<div style="
-background:#f8f8f8;
-padding:24px;
-border-radius:24px;
-margin-bottom:24px;
-">
-
-<h2 style="font-size:24px;margin-bottom:14px;">
-Ключевой ген роста
-</h2>
-
-<p id="pdfGene"
-style="line-height:1.8;font-size:16px;">
-</p>
-
+<div class="pdf-block">
+<h2>Главный системный сбой</h2>
+<p id="pdfProblem" class="pdf-text"></p>
 </div>
 
-<div style="
-margin-top:40px;
-padding-top:24px;
-border-top:1px solid #eee;
-">
-
-<div style="
-font-size:18px;
-font-weight:700;
-margin-bottom:14px;
-color:#C9A03D;
-">
-Продолжить эволюцию бизнеса →
+<div class="pdf-block">
+<h2>Ключевой ген роста</h2>
+<p id="pdfGene" class="pdf-text"></p>
 </div>
 
-<div style="
-font-size:16px;
-line-height:1.7;
-margin-bottom:16px;
-">
-Лаборатория публикует:
-<br>
-— механики роста
-<br>
-— системы продвижения
-<br>
+<div class="pdf-footer">
+<p class="pdf-footer-title">Продолжить эволюцию бизнеса →</p>
+<p class="pdf-footer-text">
+Лаборатория публикует:<br>
+— механики роста<br>
+— системы продвижения<br>
 — автоматизацию бизнеса
-</div>
-
-<div style="
-font-size:16px;
-font-weight:600;
-color:#9d7a20;
-">
-MAX:
-https://max.ru/id772773475390_biz
+</p>
+<p class="pdf-footer-link">MAX: https://max.ru/id772773475390_biz</p>
 </div>
 
 </div>
@@ -1276,47 +1252,6 @@ answers:[
 
 let currentQuestion = 0;
 let totalScore = 0;
-
-const THEME_STORAGE_KEY = 'genom-theme';
-
-function getStoredTheme(){
-
-const saved = localStorage.getItem(THEME_STORAGE_KEY);
-if(saved === 'light' || saved === 'dark'){
-return saved;
-}
-
-return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-
-}
-
-function applyTheme(theme){
-
-document.documentElement.setAttribute('data-theme', theme);
-localStorage.setItem(THEME_STORAGE_KEY, theme);
-
-const toggle = document.getElementById('themeToggle');
-if(!toggle){
-return;
-}
-
-toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-toggle.title = theme === 'dark' ? 'Светлая тема' : 'Тёмная тема';
-
-}
-
-function initTheme(){
-
-applyTheme(getStoredTheme());
-
-document.getElementById('themeToggle').addEventListener('click', function(){
-
-const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-applyTheme(current === 'dark' ? 'light' : 'dark');
-
-});
-
-}
 
 function goToScreen(id){
 
@@ -1441,9 +1376,6 @@ function showAnalysis(){
 
 goToScreen('screenAnalysis');
 
-const analysisCard = document.getElementById('screenAnalysis');
-analysisCard.classList.add('analysis--loading');
-
 const texts = [
 
 "Анализируем архитектуру бизнеса…",
@@ -1477,8 +1409,6 @@ setTimeout(showResult,800);
 }
 
 function showResult(){
-
-document.getElementById('screenAnalysis').classList.remove('analysis--loading');
 
 goToScreen('screenResult');
 
@@ -1537,6 +1467,15 @@ resultLevel.dataset.level = levelKey;
 
 document.getElementById('mainProblem').innerText = problem;
 document.getElementById('growthGene').innerText = gene;
+
+const roadmap = document.querySelector('#screenResult .roadmap');
+if(roadmap){
+roadmap.classList.remove('roadmap--visible');
+setTimeout(function(){
+void roadmap.offsetWidth;
+roadmap.classList.add('roadmap--visible');
+},280);
+}
 
 }
 
@@ -1687,7 +1626,9 @@ document.getElementById('pdfTemplate');
 const canvas =
 await html2canvas(pdfElement,{
 scale:2,
-useCORS:true
+useCORS:true,
+backgroundColor:'#f6f0e8',
+logging:false
 });
 
 const imgData =
@@ -1718,7 +1659,6 @@ pdf.save('genom-rosta.pdf');
 
 }
 
-initTheme();
 
 </script>
 
