@@ -90,7 +90,7 @@
     .logo {
       text-align: center;
       margin-bottom: 24px;
-      min-height: 120px;
+      min-height: 100px;
     }
 
     /* Стили для анимированного текста */
@@ -133,17 +133,6 @@
       white-space: pre-wrap;
     }
 
-    .static-text {
-      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      background: linear-gradient(135deg, #C9A03D, #e2c36c);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
     .cursor {
       display: inline-block;
       width: 3px;
@@ -158,18 +147,14 @@
       height: 28px;
     }
 
+    .cursor-hidden {
+      opacity: 0 !important;
+      animation: none !important;
+    }
+
     @keyframes blink {
       0%, 50% { opacity: 1; }
       51%, 100% { opacity: 0; }
-    }
-
-    .subtitle {
-      margin-top: 10px;
-      font-size: 15px;
-      line-height: 1.5;
-      color: #5d6877;
-      font-family: 'Manrope', system-ui, sans-serif;
-      font-weight: 600;
     }
 
     .hero {
@@ -203,22 +188,78 @@
       box-shadow: none;
     }
 
-    .hero-text h2 {
-      font-family: 'Manrope', system-ui, sans-serif;
-      font-size: 34px;
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-      margin-bottom: 16px;
+    .hero-text {
+      margin-top: 8px;
+      width: 100%;
     }
 
-    .hero-text p {
+    /* Надпись "Лаборатория роста бизнеса" над фото */
+    .lab-title {
+      font-family: 'Manrope', system-ui, sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Диагностический текст под фото - с анимацией печати */
+    .diagnostic-text {
+      font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #5d6877;
+      text-align: center;
+      margin-top: 24px;
+      margin-bottom: 20px;
+      min-height: 80px;
+    }
+
+    .diagnostic-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .diagnostic-animated {
+      font-size: 20px;
+      font-weight: 600;
+      color: #5d6877;
+      white-space: pre-wrap;
+    }
+
+    .diagnostic-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(135deg, #C9A03D, #e2c36c);
+      margin-left: 4px;
+      animation: blink 0.8s infinite;
+      vertical-align: middle;
+    }
+
+    /* Описательный текст */
+    .description-text {
       font-size: 16px;
       line-height: 1.7;
       color: #536173;
       max-width: 58ch;
       margin-left: auto;
       margin-right: auto;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .description-text.visible {
+      opacity: 1;
     }
 
     .btn, button.btn {
@@ -233,6 +274,23 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       transition: transform 0.2s ease, filter 0.2s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .btn.visible, button.btn.visible {
+      animation: buttonAppear 0.6s ease forwards;
+    }
+
+    @keyframes buttonAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .btn:hover, button.btn:hover {
@@ -592,9 +650,6 @@
     }
 
     @media (max-width: 720px) {
-      .hero-text h2 {
-        font-size: 30px;
-      }
       .question {
         font-size: 24px;
       }
@@ -604,14 +659,17 @@
       .animated-title {
         font-size: 28px;
       }
-      .animated-subtitle {
+      .lab-title {
         font-size: 24px;
       }
       .cursor {
         height: 28px;
       }
-      .cursor-sub {
-        height: 24px;
+      .diagnostic-animated {
+        font-size: 18px;
+      }
+      .diagnostic-cursor {
+        height: 22px;
       }
     }
 
@@ -619,24 +677,27 @@
       .container {
         padding: 16px 14px 72px;
       }
-      .logo h1, .result-title {
-        font-size: 28px;
-      }
-      .hero-image img {
-        width: 65%;
-        max-width: 65%;
-      }
       .animated-title {
         font-size: 24px;
       }
-      .animated-subtitle {
+      .lab-title {
         font-size: 20px;
       }
       .cursor {
         height: 24px;
       }
-      .cursor-sub {
+      .hero-image img {
+        width: 65%;
+        max-width: 65%;
+      }
+      .diagnostic-animated {
+        font-size: 16px;
+      }
+      .diagnostic-cursor {
         height: 20px;
+      }
+      .description-text {
+        font-size: 14px;
       }
     }
   </style>
@@ -647,36 +708,42 @@
   <!-- ЭКРАН INTRO с анимацией печати -->
   <div class="card" id="screenIntro">
     <div class="logo">
-      <div class="text-type-container" id="textTypeContainer">
+      <div class="text-type-container">
         <div class="text-type-line">
           <span id="animatedTitle" class="animated-title"></span>
           <span id="titleCursor" class="cursor"></span>
         </div>
-        <div class="text-type-line">
-          <span id="animatedSubtitle" class="animated-subtitle"></span>
-          <span id="subtitleCursor" class="cursor cursor-sub"></span>
-        </div>
       </div>
-      <div class="subtitle" id="staticSubtitle" style="opacity: 0;">Интерактивная диагностика архитектуры бизнеса</div>
     </div>
 
     <div class="hero">
+      <!-- Надпись "Лаборатория роста бизнеса" над фото -->
+      <div class="lab-title">Лаборатория роста бизнеса</div>
+      
       <div class="hero-image">
         <img src="hero.jpg" alt="Лаборатория роста бизнеса">
       </div>
+      
       <div class="hero-text">
-        <h2>Лаборатория роста бизнеса</h2>
-        <p>
-          Система определит, что именно тормозит рост вашего бизнеса, и покажет точки усиления:<br>
+        <!-- Диагностический текст под фото с анимацией печати -->
+        <div class="diagnostic-text">
+          <div class="diagnostic-line">
+            <span id="diagnosticAnimated" class="diagnostic-animated"></span>
+            <span id="diagnosticCursor" class="diagnostic-cursor"></span>
+          </div>
+        </div>
+        <!-- Описательный текст, появляется после анимации -->
+        <div class="description-text" id="descriptionText">
+          Поможет определить что именно тормозит рост вашего бизнеса и покажет точки усиления:<br>
           контент, упаковку, воронку, смыслы и автоматизацию.
-        </p>
+        </div>
       </div>
     </div>
 
-    <button type="button" class="primary-btn btn" onclick="goToScreen('screenConsent')">НАЧАТЬ ДИАГНОСТИКУ</button>
+    <button type="button" id="startButton" class="primary-btn btn" onclick="goToScreen('screenConsent')">НАЧАТЬ ДИАГНОСТИКУ</button>
   </div>
 
-  <!-- ОСТАЛЬНЫЕ ЭКРАНЫ (без изменений) -->
+  <!-- ОСТАЛЬНЫЕ ЭКРАНЫ -->
   <div class="card hidden" id="screenConsent">
     <div class="section-title">Перед запуском диагностики</div>
     <div class="input-group">
@@ -796,60 +863,55 @@
 <script>
   // Анимация печати для заголовков
   const titleText = "ГЕНОМ РОСТА";
-  const subtitleMainText = "Лаборатория роста бизнеса";
+  const diagnosticText = "Интерактивная диагностика архитектуры бизнеса";
   
   let titleIndex = 0;
-  let subtitleIndex = 0;
-  let titleComplete = false;
-  let subtitleComplete = false;
+  let diagnosticIndex = 0;
   
   const titleElement = document.getElementById('animatedTitle');
-  const subtitleElement = document.getElementById('animatedSubtitle');
+  const diagnosticElement = document.getElementById('diagnosticAnimated');
   const titleCursor = document.getElementById('titleCursor');
-  const subtitleCursor = document.getElementById('subtitleCursor');
-  const staticSubtitle = document.getElementById('staticSubtitle');
+  const diagnosticCursor = document.getElementById('diagnosticCursor');
+  const descriptionText = document.getElementById('descriptionText');
+  const startButton = document.getElementById('startButton');
   
+  // Функция печати "ГЕНОМ РОСТА"
   function typeTitle() {
     if (titleIndex < titleText.length) {
       titleElement.textContent += titleText.charAt(titleIndex);
       titleIndex++;
-      setTimeout(typeTitle, 75); // скорость печати
+      setTimeout(typeTitle, 75);
     } else {
-      titleComplete = true;
-      titleCursor.style.opacity = '0';
-      checkBothComplete();
+      // Прячем курсор заголовка
+      titleCursor.classList.add('cursor-hidden');
+      // Запускаем печать диагностического текста под фото
+      setTimeout(typeDiagnostic, 200);
     }
   }
   
-  function typeSubtitle() {
-    if (subtitleIndex < subtitleMainText.length) {
-      subtitleElement.textContent += subtitleMainText.charAt(subtitleIndex);
-      subtitleIndex++;
-      setTimeout(typeSubtitle, 60); // скорость печати
+  // Функция печати "Интерактивная диагностика архитектуры бизнеса"
+  function typeDiagnostic() {
+    if (diagnosticIndex < diagnosticText.length) {
+      diagnosticElement.textContent += diagnosticText.charAt(diagnosticIndex);
+      diagnosticIndex++;
+      setTimeout(typeDiagnostic, 50);
     } else {
-      subtitleComplete = true;
-      subtitleCursor.style.opacity = '0';
-      checkBothComplete();
-    }
-  }
-  
-  function checkBothComplete() {
-    if (titleComplete && subtitleComplete) {
-      // Показываем статический подзаголовок с плавным появлением
+      // Прячем курсор диагностического текста
+      diagnosticCursor.classList.add('cursor-hidden');
+      // Показываем описательный текст и кнопку
       setTimeout(() => {
-        staticSubtitle.style.transition = 'opacity 0.8s ease';
-        staticSubtitle.style.opacity = '1';
+        descriptionText.classList.add('visible');
+        startButton.classList.add('visible');
       }, 300);
     }
   }
   
-  // Запускаем анимацию после загрузки страницы
+  // Запускаем анимацию только для "ГЕНОМ РОСТА"
   setTimeout(() => {
     typeTitle();
-    setTimeout(typeSubtitle, 200); // небольшая задержка перед началом второго заголовка
   }, 500);
 
-  // Остальной JavaScript без изменений
+  // Остальной JavaScript
   const questions = [
     { question: "Что сейчас происходит с продажами через контент?", answers: [{ text: "Контент есть, но продаж почти нет", score: 1 }, { text: "Продажи есть, но нестабильно", score: 2 }, { text: "Контент уже приводит клиентов", score: 3 }] },
     { question: "Как публикуется контент?", answers: [{ text: "Без системы и регулярности", score: 1 }, { text: "Периодически по вдохновению", score: 2 }, { text: "Есть система публикаций", score: 3 }] },
